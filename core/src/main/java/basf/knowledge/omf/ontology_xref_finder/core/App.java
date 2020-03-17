@@ -30,13 +30,11 @@ public class App {
 		
 		OntologySaver ontologySaver = new OntologySaverImpl();
 		ConfigParser configParser = null;
-		PomParser pomParser = null;
 		AbstractXrefClient xrefClient = null;
 		ArgumentParser argParser = null;
 		try {
 			configParser = new ConfigParser();
-			pomParser = new PomParser();
-			argParser = new ArgumentParser(pomParser.getPom());
+			argParser = new ArgumentParser();
 			if (!argParser.parse(args)) {
 				return;
 			}
@@ -48,7 +46,7 @@ public class App {
 			
 			xrefClient = new OLSXrefClient("https://www.ebi.ac.uk/ols/api", argParser.getInputOntologyFilename(),
 					argParser.getMaxXrefs());
-		} catch (IOException | XmlPullParserException e) {
+		} catch (IOException e) {
 			LOGGER.severe("Could not read POM metadata");
 			e.printStackTrace();
 			return;

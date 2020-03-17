@@ -34,10 +34,8 @@ public class ArgumentParser {
 	private Integer maxXrefs;
 	private String configFilename;
 	private Options options = new Options();
-	private Model pom = null;
 
-	public ArgumentParser(Model pom) {
-		this.pom = pom;
+	public ArgumentParser() {
 		addOptions();
 	}
 
@@ -54,7 +52,7 @@ public class ArgumentParser {
 		}
 		
 		if (cmd.hasOption("h")) {
-			formatter.printHelp(pom.getArtifactId(), "---", options, "---", true);
+			formatter.printHelp("ontology_xref_finder", "---", options, "---", true);
 			return false;
 		}
 		
@@ -147,8 +145,6 @@ public class ArgumentParser {
 		builder.append(configFilename);
 		builder.append(", options=");
 		builder.append(options);
-		builder.append(", pom=");
-		builder.append(pom);
 		builder.append("]");
 		return builder.toString();
 	}
