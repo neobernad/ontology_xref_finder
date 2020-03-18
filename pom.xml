@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-  <groupId>basf.knowledge.omf</groupId>
-  <artifactId>ontology_xref_finder</artifactId>
-  <version>0.0.1</version>
-  <packaging>pom</packaging>
+	<groupId>basf.knowledge.omf</groupId>
+	<artifactId>ontology_xref_finder</artifactId>
+	<version>0.0.1</version>
+	<packaging>pom</packaging>
 
-  <name>ontology_xref_finder</name>
-  <url>http://maven.apache.org</url>
+	<name>ontology_xref_finder</name>
+	<url>http://maven.apache.org</url>
 
-  <properties>
+	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -78,9 +80,14 @@
 			<version>0.27</version>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.jgoodies</groupId>
+			<artifactId>jgoodies-forms</artifactId>
+			<version>1.8.0</version>
+		</dependency>
 	</dependencies>
-  <modules>
-    <module>core</module>
-    <module>frontend</module>
-  </modules>
+	<modules>
+		<module>core</module>
+		<module>frontend</module>
+	</modules>
 </project>

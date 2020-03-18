@@ -16,20 +16,32 @@ import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JSpinner;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import com.formdev.flatlaf.icons.FlatFileViewFileIcon;
 import com.formdev.flatlaf.icons.FlatFileViewFloppyDriveIcon;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.FormSpecs;
+import com.jgoodies.forms.layout.RowSpec;
 
 import basf.knowledge.omf.ontology_xref_finder.frontend.utils.HTMLUtils;
 
@@ -189,6 +201,44 @@ public class MainFrame extends JFrame {
 		Component horizontalStrut = Box.createHorizontalStrut(20);
 		panelSouthCenter.add(horizontalStrut);
 		panelSouthCenter.add(btnClose);
+		
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		contentPane.add(tabbedPane, BorderLayout.CENTER);
+		
+		JPanel tabParameters = new JPanel();
+		tabbedPane.addTab("Parameters", null, tabParameters, "Execution parameters");
+		tabParameters.setLayout(new BorderLayout(0, 0));
+		
+		JPanel paramPanel = new JPanel();
+		JScrollPane scrollPanel = new JScrollPane(paramPanel);
+		tabParameters.add(scrollPanel);
+		paramPanel.setLayout(new FormLayout(new ColumnSpec[] {
+				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,
+				FormSpecs.RELATED_GAP_COLSPEC,
+				FormSpecs.DEFAULT_COLSPEC,},
+			new RowSpec[] {
+				FormSpecs.RELATED_GAP_ROWSPEC,
+				FormSpecs.DEFAULT_ROWSPEC,}));
+		
+		JLabel lblMaxNumXref = new JLabel("Max. number of xref per term:");
+		paramPanel.add(lblMaxNumXref, "2, 2");
+		
+		SpinnerModel sm = new SpinnerNumberModel(0, 0, 10, 1); //default value, lower bound, upper bound,increment by
+		JSpinner spinnerMaxNumXref = new JSpinner(sm);
+		paramPanel.add(spinnerMaxNumXref, "4, 2");
+		scrollPanel.setViewportBorder(new EmptyBorder(5, 5, 5, 5));
+		scrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+		scrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		
+		JProgressBar progressBar = new JProgressBar();
+		tabParameters.add(progressBar, BorderLayout.SOUTH);
+		
+		JPanel tabLog = new JPanel();
+		tabbedPane.addTab("Log", null, tabLog, "Show application logs");
+		tabLog.setBorder(new EmptyBorder(5, 5, 5, 5));
+		
+		
 	}
 
 	private void openOntologyActionPerformed(ActionEvent e) {
