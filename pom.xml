@@ -71,8 +71,16 @@
 			<artifactId>maven-model</artifactId>
 			<version>3.3.9</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.formdev/flatlaf -->
+		<dependency>
+			<groupId>com.formdev</groupId>
+			<artifactId>flatlaf</artifactId>
+			<version>0.27</version>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
   <modules>
     <module>core</module>
+    <module>frontend</module>
   </modules>
 </project>
