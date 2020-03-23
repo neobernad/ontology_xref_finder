@@ -7,4 +7,5 @@ import org.semanticweb.owlapi.model.OWLClass;
 
 public interface IXrefClient {
 	public Stream<IRI> findXrefByLabel(OWLClass owlClass);
+	public long getNumberOfClasses();
 }

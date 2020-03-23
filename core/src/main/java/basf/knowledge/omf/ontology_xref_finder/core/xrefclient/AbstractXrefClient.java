@@ -98,13 +98,17 @@ public abstract class AbstractXrefClient implements IXrefClient {
 		return xrefIRIs.stream();
 	}
 	
+	public long getNumberOfClasses() {
+		return this.ontology.classesInSignature().count();
+	}
+	
 	/**
 	 * This method loops through the OWL classes and tries to find
 	 * xrefs given a OWL class rdfs:label. The annotations are added
 	 * to this.ontology.
 	 */
 	public void processOntologyXrefs() {
-		LOGGER.info("Detected '" + this.ontology.classesInSignature().count() + "' classes in input ontology.");
+		LOGGER.info("Detected '" + getNumberOfClasses() + "' classes in input ontology.");
 		this.ontology.classesInSignature()
 				.forEach(owlClass -> {
 					Stream<IRI> xrefs = findXrefByLabel(owlClass);

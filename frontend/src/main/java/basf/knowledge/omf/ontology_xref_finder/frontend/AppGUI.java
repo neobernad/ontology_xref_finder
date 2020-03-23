@@ -1,5 +1,6 @@
 package basf.knowledge.omf.ontology_xref_finder.frontend;
 import java.awt.EventQueue;
+import java.util.Locale;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 
@@ -10,6 +11,7 @@ public class AppGUI {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		Locale.setDefault(new Locale("en", "EN"));
 		
 		FlatDarkLaf.install();
 		
@@ -22,6 +24,7 @@ public class AppGUI {
 					frame.setLocationRelativeTo( null );
 					frame.setVisible( true );
 				} catch (Exception e) {
+					System.out.println("Unhandled exception: " + e.getMessage());
 					e.printStackTrace();
 				}
 			}

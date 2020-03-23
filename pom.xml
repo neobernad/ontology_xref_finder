@@ -85,6 +85,18 @@
 			<artifactId>jgoodies-forms</artifactId>
 			<version>1.8.0</version>
 		</dependency>
+		<!-- To avoid OLSAPI org.slf4j.impl.StaticLoggerBinder error  -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.21</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.21</version>
+		</dependency>
+
 	</dependencies>
 	<modules>
 		<module>core</module>
