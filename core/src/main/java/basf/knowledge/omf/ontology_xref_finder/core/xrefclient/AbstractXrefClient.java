@@ -30,6 +30,7 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 public abstract class AbstractXrefClient implements IXrefClient {
 	private static final Logger LOGGER = Logger.getLogger(AbstractXrefClient.class.getName());
+	public static final Integer INFINITE_XREFS = -1; // Search all the Xrefs available in the API
 	protected String url;
 	protected OWLOntology ontology;
 	protected Integer max_xrefs; // Maximum number of xrefs to add per term
@@ -40,10 +41,21 @@ public abstract class AbstractXrefClient implements IXrefClient {
 		this.url = url;
 		this.ontology = manager.loadOntologyFromOntologyDocument(ontologyFile);
 		this.max_xrefs = max_xrefs;
+		LOGGER.info("Using API: " + url);
+		LOGGER.info("Ontology file: " + ontologyFile.getAbsolutePath());
+		LOGGER.info("Max. xrefs per term: " + max_xrefs);
 	}
 
 	public AbstractXrefClient(String url, String ontologyFilePath, Integer max_xrefs) throws OWLOntologyCreationException {
 		this(url, new File(ontologyFilePath), max_xrefs);
+	}
+	
+	public AbstractXrefClient(String url, String ontologyFilePath) throws OWLOntologyCreationException {
+		this(url, new File(ontologyFilePath), INFINITE_XREFS);
+	}
+	
+	public AbstractXrefClient(String url, File ontologyFile) throws OWLOntologyCreationException {
+		this(url, ontologyFile, INFINITE_XREFS);
 	}
 
 	protected WebTarget createClient(APIQueryParams apiQueryParams) {
@@ -70,6 +82,22 @@ public abstract class AbstractXrefClient implements IXrefClient {
 		return manager;
 	}
 	
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public Integer getMax_xrefs() {
+		return max_xrefs;
+	}
+
+	public void setMax_xrefs(Integer max_xrefs) {
+		this.max_xrefs = max_xrefs;
+	}
+
 	/**
 	 * Returns a list of IRIs that are Xref to owlClass
 	 * according to its rdfs:label (if present).

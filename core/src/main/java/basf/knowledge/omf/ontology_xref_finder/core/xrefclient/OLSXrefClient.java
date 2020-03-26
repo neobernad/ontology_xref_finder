@@ -19,7 +19,7 @@ import basf.knowledge.omf.ontology_xref_finder.core.pojo.OLSSearch;
 import basf.knowledge.omf.ontology_xref_finder.core.pojo.OLSSearchItem;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.APIQueryParams;
 
-
+// TODO Refactor this in a new package with some interface
 class OLSEndpoint {
 	private static String SEARCH = "/search";
 
@@ -48,6 +48,14 @@ public class OLSXrefClient extends AbstractXrefClient {
 
 	public OLSXrefClient(String url, String ontology, Integer max_xrefs) throws OWLOntologyCreationException {
 		super(url, ontology, max_xrefs);
+	}
+	
+	public OLSXrefClient(String url, File ontology) throws OWLOntologyCreationException {
+		super(url, ontology);
+	}
+	
+	public OLSXrefClient(String url, String ontology) throws OWLOntologyCreationException {
+		super(url, ontology);
 	}
 
 	@Override

@@ -3,22 +3,21 @@ package basf.knowledge.omf.ontology_xref_finder.frontend;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dialog.ModalityType;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.PrintStream;
-import java.util.stream.Stream;
+import java.util.logging.Logger;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -42,9 +41,6 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLOntology;
-
 import com.formdev.flatlaf.icons.FlatFileViewFileIcon;
 import com.formdev.flatlaf.icons.FlatFileViewFloppyDriveIcon;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -58,13 +54,18 @@ import basf.knowledge.omf.ontology_xref_finder.core.xrefclient.OLSXrefClient;
 import basf.knowledge.omf.ontology_xref_finder.frontend.utils.CursorController;
 import basf.knowledge.omf.ontology_xref_finder.frontend.utils.HTMLUtils;
 import basf.knowledge.omf.ontology_xref_finder.output_stream.TextAreaOutputStream;
+import basf.knowledge.omf.ontology_xref_finder.runnable.RunnableProgress;
+import basf.knowledge.omf.ontology_xref_finder.runnable.RunnableProgressListener;
 
-public class MainFrame extends JFrame {
+import javax.swing.JCheckBox;
+
+public class MainFrame extends JFrame implements RunnableProgressListener {
 
 	private static final long serialVersionUID = 8909924824135174494L;
 	private static final String APP_NAME = "Ontology crossreference finder";
 	private static final Dimension APP_DEFAULT_DIMENSION = new Dimension(600, 400);
 	private static final String GITHUB_LINK = HTMLUtils.linkIfy("https://github.com/neobernad/ontology_xref_finder");
+	private static final String NO_LOG_DATA = "No log data.";
 	private Container contentPane = getContentPane();
 
 	// Application objects
@@ -73,8 +74,12 @@ public class MainFrame extends JFrame {
 			"D:/Program Files/Eclipse JEE/workspace-jee/ontology_xref_finder/core/src/test/resources/test.owl");
 
 	// Shared components (used by other components)
+	private JButton btnProcess = new JButton();
 	private JTextArea txtLogArea = new JTextArea();
 	private JProgressBar progressBar = new JProgressBar();
+	private JLabel lblMaxNumXref = new JLabel();
+	private JSpinner spinnerMaxNumXref = new JSpinner();
+	private JCheckBox chckbxAllXrefs = new JCheckBox();
 
 	public MainFrame() {
 		initialize();
@@ -211,22 +216,36 @@ public class MainFrame extends JFrame {
 
 			JPanel paramPanel = new JPanel();
 			JScrollPane scrollPanel = new JScrollPane(paramPanel);
-			tabParameters.add(scrollPanel);
-			paramPanel.setLayout(new FormLayout(
-					new ColumnSpec[] { FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC,
-							FormSpecs.RELATED_GAP_COLSPEC, FormSpecs.DEFAULT_COLSPEC, },
-					new RowSpec[] { FormSpecs.RELATED_GAP_ROWSPEC, FormSpecs.DEFAULT_ROWSPEC, }));
-
-			JLabel lblMaxNumXref = new JLabel("Max. number of xref per term:");
-			paramPanel.add(lblMaxNumXref, "2, 2");
-
-			SpinnerModel sm = new SpinnerNumberModel(1, 0, 10, 1); // default value, lower bound, upper bound,increment
-																	// by
-			JSpinner spinnerMaxNumXref = new JSpinner(sm);
-			paramPanel.add(spinnerMaxNumXref, "4, 2");
 			scrollPanel.setViewportBorder(new EmptyBorder(5, 5, 5, 5));
 			scrollPanel.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
 			scrollPanel.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			tabParameters.add(scrollPanel);
+			paramPanel.setLayout(new FormLayout(new ColumnSpec[] {
+					FormSpecs.RELATED_GAP_COLSPEC,
+					FormSpecs.DEFAULT_COLSPEC,
+					FormSpecs.RELATED_GAP_COLSPEC,
+					FormSpecs.DEFAULT_COLSPEC,
+					FormSpecs.RELATED_GAP_COLSPEC,
+					FormSpecs.DEFAULT_COLSPEC,},
+				new RowSpec[] {
+					FormSpecs.RELATED_GAP_ROWSPEC,
+					FormSpecs.DEFAULT_ROWSPEC,
+					FormSpecs.RELATED_GAP_ROWSPEC,
+					FormSpecs.DEFAULT_ROWSPEC,}));
+
+			
+			chckbxAllXrefs.setText("All xrefs");
+			chckbxAllXrefs.addItemListener(e -> chckbxAllXrefsStateChanged(e));
+			disableLimitXrefSearch();
+			paramPanel.add(chckbxAllXrefs, "2, 2");
+			
+			lblMaxNumXref.setText("Limit number of xref per term");
+			paramPanel.add(lblMaxNumXref, "4, 2");
+			SpinnerModel sm = new SpinnerNumberModel(1, 1, 10, 1);
+			spinnerMaxNumXref.setModel(sm);
+			paramPanel.add(spinnerMaxNumXref, "6, 2");
+			disableLimitXrefSearch();
+			
 			progressBar.setStringPainted(true);
 			progressBar.setVisible(false);
 			tabParameters.add(progressBar, BorderLayout.SOUTH);
@@ -244,7 +263,7 @@ public class MainFrame extends JFrame {
 			txtLogArea.setLineWrap(true);
 			txtLogArea.setFont(new Font("Consolas", Font.PLAIN, 12));
 			txtLogArea.setEditable(false);
-			txtLogArea.setText("No log data.");
+			txtLogArea.setText(NO_LOG_DATA);
 
 			// Redirects stdout and stderr to the txtLogArea component
 			// if DEV_MODE = FALSE (for release app)
@@ -277,7 +296,8 @@ public class MainFrame extends JFrame {
 			buttonPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 			southPanel.add(buttonPanel, BorderLayout.CENTER);
 
-			JButton btnProcess = new JButton("Process");
+			btnProcess.setText("Process");
+//			btnProcess.setEnabled(false);
 			btnProcess.addActionListener(e -> btnProcessActionPerformed(e));
 
 			JButton btnClose = new JButton("Close");
@@ -300,8 +320,8 @@ public class MainFrame extends JFrame {
 			JFileChooser fileChooser = new JFileChooser();
 			int result = fileChooser.showOpenDialog(this);
 			if (result == JFileChooser.APPROVE_OPTION) {
-				File selectedFile = fileChooser.getSelectedFile();
-				System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+				ontologyFile = fileChooser.getSelectedFile();
+				btnProcess.setEnabled(true);
 			}
 		});
 	}
@@ -309,39 +329,57 @@ public class MainFrame extends JFrame {
 	private void saveOntologyActionPerformed(ActionEvent e) {
 		System.out.println("Saving ontology");
 	}
+	
+	private void enableLimitXrefSearch() {
+		chckbxAllXrefs.setSelected(false);
+		lblMaxNumXref.setEnabled(true);
+		spinnerMaxNumXref.setEnabled(true);
+	}
+	
+	private void disableLimitXrefSearch() {
+		chckbxAllXrefs.setSelected(true);
+		lblMaxNumXref.setEnabled(false);
+		spinnerMaxNumXref.setEnabled(false);
+	}
+	
+	private int getNumberOfXrefToSearch() {
+		if (chckbxAllXrefs.isSelected()) {
+			return AbstractXrefClient.INFINITE_XREFS;
+		}
+		return (Integer) spinnerMaxNumXref.getValue();
+	}
 
 	private void exitActionPerformed() {
 		dispose();
+	}
+	
+	private void chckbxAllXrefsStateChanged(ItemEvent e) {
+		if (e.getStateChange() == ItemEvent.SELECTED) {
+			disableLimitXrefSearch();
+		} else {
+			enableLimitXrefSearch();
+		}
 	}
 
 	private void btnProcessActionPerformed(ActionEvent e) {
 		try {
 			CursorController.setWaitCursor(this);
 			resetExecution();
-			xrefClient = new OLSXrefClient("https://www.ebi.ac.uk/ols/api", ontologyFile, 1);
+			
+			xrefClient = new OLSXrefClient("https://www.ebi.ac.uk/ols/api", 
+					ontologyFile, getNumberOfXrefToSearch());
 			progressBar.setMaximum((int) xrefClient.getNumberOfClasses());
 			progressBar.setVisible(true);
 			txtLogArea.setText("");
-			OWLOntology ontology = xrefClient.getOntology();
-			JFrame jframe = this;
-			
-			//TODO: Create a runnable class instead of this crap
-			Thread thread = new Thread(new Runnable() {
-				JFrame currentFrame = jframe;
-
-				@Override
-				public void run() {
-					ontology.classesInSignature().forEach(owlClass -> {
-						Stream<IRI> xrefs = xrefClient.findXrefByLabel(owlClass);
-						xrefClient.addXrefToClass(owlClass, xrefs);
-						progressBar.setValue(progressBar.getValue() + 1);
-					});
-					CursorController.resetCursor(currentFrame);
-				}
-			});
+			Thread thread = new Thread(new RunnableProgress(this, xrefClient, progressBar));
 			thread.start();
+			
 		} catch (Exception ex) {
 			txtLogArea.append("Unhandled exception: " + ex.getMessage());
+			JOptionPane.showMessageDialog(null, ex.getMessage(), "Unexpected error", JOptionPane.ERROR_MESSAGE);
+		} finally {
+			CursorController.resetCursor(this);
+			btnProcess.setEnabled(false);
 		}
 	}
 
@@ -349,7 +387,7 @@ public class MainFrame extends JFrame {
 		xrefClient = null;
 		progressBar.setVisible(false);
 		progressBar.setValue(0);
-		txtLogArea.setText("No log data.");
+		txtLogArea.setText(NO_LOG_DATA);
 	}
 
 	private void aboutActionPerformed() {
@@ -364,6 +402,11 @@ public class MainFrame extends JFrame {
 		aboutMessage.setBorder(null);
 		aboutMessage.setText(HTMLUtils.htmlIfy(sb.toString()));
 		JOptionPane.showMessageDialog(this, aboutMessage, "About", JOptionPane.PLAIN_MESSAGE);
+	}
+
+	@Override
+	public void actionPerformed() {
+		JOptionPane.showMessageDialog(null, "Ontology properly annotated", "Execution finished", JOptionPane.OK_OPTION);
 	}
 
 }
