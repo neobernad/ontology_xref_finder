@@ -7987,7 +7987,12 @@
     <AnnotationAssertion>
         <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
         <IRI>http://purl.obolibrary.org/obo/AGRO_00000237</IRI>
-        <Literal>http://purl.obolibrary.org/obo/NCIT_C21119</Literal>
+        <Literal>http://purl.obolibrary.org/obo/IAO_0000119</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000237</IRI>
+        <Literal>http://purl.org/dc/elements/1.1/source</Literal>
     </AnnotationAssertion>
     <AnnotationAssertion>
         <AnnotationProperty abbreviatedIRI="rdfs:label"/>
@@ -8002,7 +8007,12 @@
     <AnnotationAssertion>
         <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
         <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
-        <Literal>http://purl.obolibrary.org/obo/OBCS_0000074</Literal>
+        <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>http://purl.obolibrary.org/obo/PR_000029067</Literal>
     </AnnotationAssertion>
     <AnnotationAssertion>
         <AnnotationProperty abbreviatedIRI="rdfs:label"/>

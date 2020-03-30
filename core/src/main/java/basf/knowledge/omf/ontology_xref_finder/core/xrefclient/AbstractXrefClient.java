@@ -36,6 +36,7 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	protected String url;
 	protected OWLOntology ontology;
 	protected Integer max_xrefs; // Maximum number of xrefs to add per term
+	protected List<String> ontologiesFilter = null; // Ontologies considered in a search
 	protected final OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 	protected final OWLDataFactory factory = new OWLDataFactoryImpl();
 
@@ -173,5 +174,14 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	}
 
 	protected abstract List<IRI> search(OWLAnnotation annotation) throws SocketException;
+
+	public List<String> getOntologiesFilter() {
+		return ontologiesFilter;
+	}
+
+	public void setOntologiesFilter(List<String> ontologiesFilter) {
+		this.ontologiesFilter = ontologiesFilter;
+	}
+	
 
 }

@@ -5,22 +5,18 @@ This tool reads an input ontology (`-i`) and loops through its classes. For each
 # Usage
 
 ```bash
-usage: ontology_xref_finder [-c <arg>] [-h] [-i <arg>] [-mx <arg>] [-o
-       <arg>]
+usage: ontology_xref_finder [-h] [-i <arg>] [-mx <arg>] [-o <arg>]
+       [--ols_url <arg>] [--ontologies <arg>]
 ---
- -c,--config <arg>       Path to a config file
  -h                      help
  -i,--input <arg>        Input ontology file path
  -mx,--max_xrefs <arg>   Maximum number of Xrefs to add to a term
  -o,--output <arg>       Output ontology file path
+    --ols_url <arg>      URL to the OWL API (e.g.
+                         https://www.ebi.ac.uk/ols/api)
+    --ontologies <arg>   Comma separeted list of ontology names (e.g:
+                         doid,clo)
 ---
 ```
 
-# Configuration file
-
-You can override the API endpoints with via the `-c` parameter, which points to configuration file path. The configuration template is the following (change at will):
-
-```bash
-# OLS API
-ols_api="https://www.ebi.ac.uk/ols/api"
-```
+For custom OLS deployments use `--ols_url` to specify the URL of the OLS API.
