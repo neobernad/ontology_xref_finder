@@ -44,7 +44,7 @@ public class App {
 				configParser.loadConfig(argParser.getConfigFilename());
 			}
 			
-			xrefClient = new OLSXrefClient("https://www.ebi.ac.uk/ols/api", argParser.getInputOntologyFilename(),
+			xrefClient = new OLSXrefClient(configParser.getOlsApi(), argParser.getInputOntologyFilename(),
 					argParser.getMaxXrefs());
 		} catch (IOException e) {
 			LOGGER.severe("Could not read POM metadata");
