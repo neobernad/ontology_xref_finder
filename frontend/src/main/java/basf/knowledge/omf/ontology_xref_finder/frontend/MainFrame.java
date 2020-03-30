@@ -41,8 +41,18 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
+import com.formdev.flatlaf.icons.FlatAscendingSortIcon;
+import com.formdev.flatlaf.icons.FlatCheckBoxIcon;
+import com.formdev.flatlaf.icons.FlatFileChooserDetailsViewIcon;
+import com.formdev.flatlaf.icons.FlatFileChooserHomeFolderIcon;
+import com.formdev.flatlaf.icons.FlatFileChooserListViewIcon;
+import com.formdev.flatlaf.icons.FlatFileChooserNewFolderIcon;
+import com.formdev.flatlaf.icons.FlatFileChooserUpFolderIcon;
 import com.formdev.flatlaf.icons.FlatFileViewFileIcon;
 import com.formdev.flatlaf.icons.FlatFileViewFloppyDriveIcon;
+import com.formdev.flatlaf.icons.FlatFileViewHardDriveIcon;
+import com.formdev.flatlaf.icons.FlatHelpButtonIcon;
+import com.formdev.flatlaf.icons.FlatInternalFrameIconifyIcon;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
@@ -74,6 +84,11 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 			"D:/Program Files/Eclipse JEE/workspace-jee/ontology_xref_finder/core/src/test/resources/test.owl");
 
 	// Shared components (used by other components)
+	private JMenuItem menuFileOpen = new JMenuItem();
+	private JMenuItem menuFileSave = new JMenuItem();
+	private JButton btnLoadOntology = new JButton();
+	private JButton btnSaveOntology = new JButton();
+	private JButton btnDevMode = new JButton();
 	private JButton btnProcess = new JButton();
 	private JTextArea txtLogArea = new JTextArea();
 	private JProgressBar progressBar = new JProgressBar();
@@ -118,7 +133,6 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 
 			// menuFile items
 			{
-				JMenuItem menuFileOpen = new JMenuItem();
 				menuFileOpen.setText("Open ontology");
 				menuFileOpen.setAccelerator(
 						KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -126,7 +140,6 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 				menuFileOpen.addActionListener(e -> openOntologyActionPerformed(e));
 				menuFile.add(menuFileOpen);
 
-				JMenuItem menuFileSave = new JMenuItem();
 				menuFileSave.setText("Save ontology");
 				menuFileSave.setAccelerator(
 						KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
@@ -192,16 +205,21 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 			}
 		}
 
-		JButton btnLoadOntology = new JButton();
 		btnLoadOntology.setToolTipText("Load ontology");
 		btnLoadOntology.setIcon(new FlatFileViewFileIcon());
 		btnLoadOntology.addActionListener(e -> openOntologyActionPerformed(e));
-		JButton btnSaveOntology = new JButton();
+		
 		btnSaveOntology.setToolTipText("Save current ontology");
 		btnSaveOntology.setIcon(new FlatFileViewFloppyDriveIcon());
 		btnSaveOntology.setEnabled(false);
+		
+		btnDevMode.setToolTipText("Enable or disable developer mode");
+		btnDevMode.setIcon(new FlatFileViewHardDriveIcon());
+		btnDevMode.addActionListener(e -> enableDisableDevModeActionPerformed(e));
+		
 		toolBarShortcuts.add(btnLoadOntology);
 		toolBarShortcuts.add(btnSaveOntology);
+		toolBarShortcuts.add(btnDevMode);
 
 		// Tabbed pane
 
@@ -322,8 +340,14 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 			if (result == JFileChooser.APPROVE_OPTION) {
 				ontologyFile = fileChooser.getSelectedFile();
 				btnProcess.setEnabled(true);
+				menuFileSave.setEnabled(false);
 			}
 		});
+	}
+	
+	private void enableDisableDevModeActionPerformed(ActionEvent e) {
+		System.out.println("Devmode");
+		//TODO: Hide Log and Configuration tabs
 	}
 	
 	private void saveOntologyActionPerformed(ActionEvent e) {
@@ -405,8 +429,15 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 	}
 
 	@Override
-	public void actionPerformed() {
-		JOptionPane.showMessageDialog(null, "Ontology properly annotated", "Execution finished", JOptionPane.OK_OPTION);
+	public void progressFinished() {
+		JOptionPane.showMessageDialog(null, "Ontology properly annotated", "Execution finished", JOptionPane.INFORMATION_MESSAGE);
+	}
+	
+	@Override
+	public void progressError(String msg) {
+		resetExecution();
+		btnProcess.setEnabled(true);
+		JOptionPane.showMessageDialog(null, msg, "Error", JOptionPane.ERROR_MESSAGE);
 	}
 
 }

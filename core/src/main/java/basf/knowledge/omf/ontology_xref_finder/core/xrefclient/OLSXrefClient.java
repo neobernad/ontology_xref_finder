@@ -1,6 +1,7 @@
 package basf.knowledge.omf.ontology_xref_finder.core.xrefclient;
 
 import java.io.File;
+import java.net.SocketException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -59,7 +60,7 @@ public class OLSXrefClient extends AbstractXrefClient {
 	}
 
 	@Override
-	protected List<IRI> search(OWLAnnotation annotation) {
+	protected List<IRI> search(OWLAnnotation annotation) throws SocketException {
 		OWLLiteral literal = annotation.getValue().asLiteral().get();
 		String literalValue = literal.getLiteral();
 		WebTarget client = createClient(OLSEndpoint.search(literalValue, QUERY_FIELDS, this.max_xrefs));
@@ -67,14 +68,15 @@ public class OLSXrefClient extends AbstractXrefClient {
 		OLSSearch olsSearch = null;
         //System.out.println(response.readEntity(String.class));
         if (Status.OK.getStatusCode() != response.getStatus()) {
-        	LOGGER.warning("Could not process request, received status '" + response.getStatus() + "'");
-        	return null;
+        	String error = "Could not process request, received status '" + response.getStatus() + "'";
+        	LOGGER.warning(error);
+        	throw new SocketException(error);
         }
         olsSearch = response.readEntity(OLSSearch.class);
         List<OLSSearchItem> items = olsSearch.getResponse().getDocs();
         if (items.isEmpty()) {
         	LOGGER.warning("Could not find XRefs for annotation '" + literalValue + "'");
-        	return null;
+        	return  new LinkedList<IRI>();
         } else {
         	LOGGER.info("Found '" + items.size() + "' possible XRefs for '" + literalValue + "'");
         }

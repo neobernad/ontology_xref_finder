@@ -2,6 +2,7 @@ package basf.knowledge.omf.core;
 
 
 import java.io.File;
+import java.net.SocketException;
 import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -37,7 +38,7 @@ public class FindXrefTest extends TestCase {
 	}
 
 
-	public void testFindXref() throws OWLOntologyCreationException, OWLOntologyStorageException {
+	public void testFindXref() throws OWLOntologyCreationException, OWLOntologyStorageException, SocketException {
 		File ddphenoOnt = new File("src/test/resources/agro.owl");
 		File outputOnt = new File("src/test/resources/output.owl");
 		AbstractXrefClient xrefClient = new OLSXrefClient("https://www.ebi.ac.uk/ols/api", ddphenoOnt, 2);
