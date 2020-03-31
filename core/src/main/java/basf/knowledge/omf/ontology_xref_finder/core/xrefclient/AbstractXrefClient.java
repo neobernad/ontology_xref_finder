@@ -18,6 +18,7 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataFactory;
@@ -27,6 +28,7 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
 import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IXrefClient;
+import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTermSynonym;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.APIQueryParams;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.Constants;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.QueryParam;
@@ -164,10 +166,31 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	}
 	
 	public void addXrefToClass(OWLClass owlClass, List<IRI> xrefList) {
-		OWLAnnotationProperty annotationProperty = factory.getOWLAnnotationProperty(Constants.GO_HAS_DX_XREF);
+		OWLAnnotationProperty annotationProperty = factory.getOWLAnnotationProperty(Constants.GO_HAS_DB_XREF);
 		List<OWLAxiom> axioms = new LinkedList<OWLAxiom>();
 		for (IRI iri : xrefList) {
 			axioms.add(createAnnotationForClass(owlClass, annotationProperty, iri.getIRIString()));
+		}
+		manager.addAxioms(this.ontology, axioms.stream());
+	}
+	
+	//TODO: Ideally, the GO_HAS_DB_XREF should be added as an annotation
+	// to the annotationAxiom created here. No clue how to do so yet :-(
+	public void addSynonymsToClass(OWLClass owlClass, List<OntologyTermSynonym> synonymList, IRI xref) {
+		List<OWLAxiom> axioms = new LinkedList<OWLAxiom>();
+		for (OntologyTermSynonym synonym : synonymList) {
+			IRI scopeAnnotationProperty = null;
+			if (synonym.getScope().equals(Constants.HAS_EXACT_SYN)) {
+				scopeAnnotationProperty = Constants.GO_HAS_EXACT_SYN;
+			} else if (synonym.getScope().equals(Constants.HAS_NARROW_SYN)) {
+				scopeAnnotationProperty = Constants.GO_HAS_NARROW_SYN;
+			} else {
+				scopeAnnotationProperty = Constants.GO_HAS_SYN;
+			}
+			OWLAnnotationProperty scope = factory.getOWLAnnotationProperty(scopeAnnotationProperty);
+			OWLAnnotation synonymAnnotation = factory.getOWLAnnotation(scope, factory.getOWLLiteral(synonym.getName()));
+			OWLAnnotationAssertionAxiom  annotationAxiom = factory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(), synonymAnnotation);
+			axioms.add(annotationAxiom);
 		}
 		manager.addAxioms(this.ontology, axioms.stream());
 	}

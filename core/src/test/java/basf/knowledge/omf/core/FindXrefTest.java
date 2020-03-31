@@ -55,19 +55,14 @@ public class FindXrefTest extends TestCase {
 				Stream<IRI> xrefStream = xrefClient.findXrefByLabel(owlClass);
 				xrefList = xrefStream.collect(Collectors.toList());
 				xrefClient.addXrefToClass(owlClass, xrefList);
+				for (IRI xrefIri : xrefList) {
+					List<OntologyTerm> ontologyTerms = xrefClient.getTerm(xrefIri);
+					for (OntologyTerm term : ontologyTerms) {
+						xrefClient.addSynonymsToClass(owlClass, term.getObo_synonym(), xrefIri);
+					}
+				}
 			} catch (SocketException e) {
 				e.printStackTrace();
-			}
-			for (IRI iri : xrefList) {
-				System.out.println("Processing xref: " + iri.toString());
-				try {
-					List<OntologyTerm> ontologyTerms = xrefClient.getTerm(iri);
-					for (OntologyTerm term : ontologyTerms) {
-						System.out.println(term);
-					}
-				} catch (SocketException e) {
-					e.printStackTrace();
-				}
 			}
 		});
 

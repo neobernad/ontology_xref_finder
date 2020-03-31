@@ -1,7 +1,5 @@
 package basf.knowledge.omf.ontology_xref_finder.core.pojo;
 
-import java.util.List;
-
 import javax.json.bind.annotation.JsonbProperty;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
