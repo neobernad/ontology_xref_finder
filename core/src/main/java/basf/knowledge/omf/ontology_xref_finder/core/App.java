@@ -4,9 +4,9 @@ import java.util.logging.Logger;
 
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
+import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IOntologySaver;
 import basf.knowledge.omf.ontology_xref_finder.core.parser.ArgumentParser;
 import basf.knowledge.omf.ontology_xref_finder.core.service.OntologySaver;
-import basf.knowledge.omf.ontology_xref_finder.core.service.OntologySaverImpl;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.OWLFormat;
 import basf.knowledge.omf.ontology_xref_finder.core.xrefclient.AbstractXrefClient;
 import basf.knowledge.omf.ontology_xref_finder.core.xrefclient.OLSXrefClient;
@@ -23,7 +23,7 @@ public class App {
 
 	public static void main(String[] args) {
 		
-		OntologySaver ontologySaver = new OntologySaverImpl();
+		IOntologySaver ontologySaver = new OntologySaver();
 		AbstractXrefClient xrefClient = null;
 		ArgumentParser argParser = null;
 		try {

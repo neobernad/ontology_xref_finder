@@ -36,9 +36,9 @@ public class ArgumentParser {
 	private static final Logger LOGGER = Logger.getLogger(ArgumentParser.class.getName());
 	private String inputOntologyFilename;
 	private String outputOntologyFilename;
-	private String olsURL;
-	private Integer maxXrefs;
-	private List<String> ontologiesFilter;
+	private String olsURL = ArgumentsDefaultValues.OLS_URL_DEFAULT;
+	private Integer maxXrefs = ArgumentsDefaultValues.MAX_XREFS_DEFAULT;
+	private List<String> ontologiesFilter = ArgumentsDefaultValues.ONTOLOGIES_FILTER_DEFAULT;
 	private Options options = new Options();
 
 	public ArgumentParser() {

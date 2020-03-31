@@ -25,6 +25,7 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
+import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IXrefClient;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.APIQueryParams;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.Constants;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.QueryParam;
@@ -67,7 +68,9 @@ public abstract class AbstractXrefClient implements IXrefClient {
 		for (QueryParam qp : apiQueryParams.getQueryParams()) {
 			target = target.queryParam(qp.getQuery(), qp.getParam());
 		}
-		LOGGER.fine(String.format("Calling endpoint %s", target.getUri()));
+		if (Constants.DEV_MODE) {
+			LOGGER.info(String.format("Calling endpoint %s", target.getUri()));
+		}
 		return target;
 	}
 	
@@ -174,7 +177,7 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	}
 
 	protected abstract List<IRI> search(OWLAnnotation annotation) throws SocketException;
-
+	
 	public List<String> getOntologiesFilter() {
 		return ontologiesFilter;
 	}
