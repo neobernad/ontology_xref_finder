@@ -8,4 +8,4 @@ This tool reads an input ontology (`-i`) and loops through its classes. For each
 
 * [frontend](/frontend):
 
-![Main frame][assets/main_frame.png]
+![Main frame](assets/main_frame.png)
