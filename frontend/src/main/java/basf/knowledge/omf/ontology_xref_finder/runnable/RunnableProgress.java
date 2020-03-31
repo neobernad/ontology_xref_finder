@@ -3,6 +3,7 @@ package basf.knowledge.omf.ontology_xref_finder.runnable;
 import java.net.SocketException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.JProgressBar;
@@ -40,10 +41,10 @@ public class RunnableProgress implements Runnable, RunnableProgressPerformer {
 	@Override
 	public void run() {
 		xrefClient.getOntology().classesInSignature().forEach(owlClass -> {
-			Stream<IRI> xrefs = null;
 			try {
-				xrefs = xrefClient.findXrefByLabel(owlClass);
-				xrefClient.addXrefToClass(owlClass, xrefs);
+				Stream<IRI> xrefStream = xrefClient.findXrefByLabel(owlClass);
+				List<IRI> xrefList = xrefStream.collect(Collectors.toList());
+				xrefClient.addXrefToClass(owlClass, xrefList);
 				progressBar.setValue(progressBar.getValue() + 1);
 			} catch (Exception e) {
 				progressError(e.getMessage());

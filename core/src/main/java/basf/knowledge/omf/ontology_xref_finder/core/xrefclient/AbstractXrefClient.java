@@ -5,6 +5,7 @@ import java.net.SocketException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.management.RuntimeErrorException;
@@ -118,7 +119,7 @@ public abstract class AbstractXrefClient implements IXrefClient {
 		EntitySearcher.getAnnotations(owlClass, ontology).forEach(annotation -> {
 			if (annotation.getProperty().getIRI().equals(wantedIRI)) {
 				try {
-					xrefIRIs.addAll(search(annotation));
+					xrefIRIs.addAll(searchXref(annotation));
 				} catch (SocketException e) {
 					throw new RuntimeException(e.getMessage());
 				}
@@ -149,24 +150,25 @@ public abstract class AbstractXrefClient implements IXrefClient {
 		LOGGER.info("Detected '" + getNumberOfClasses() + "' classes in input ontology.");
 		this.ontology.classesInSignature()
 				.forEach(owlClass -> {
-					Stream<IRI> xrefs;
+					List<IRI> xrefList;
 					try {
-						xrefs = findXrefByLabel(owlClass);
+						Stream<IRI> xrefs = findXrefByLabel(owlClass);
+						xrefList = xrefs.collect(Collectors.toList());
 					} catch (SocketException e) {
 						// Wrapper, streams cannot throw checked exceptions...
 						// See: https://stackoverflow.com/questions/23548589/java-8-how-do-i-work-with-exception-throwing-methods-in-streams
 						throw new RuntimeException(e.getMessage());
 					}
-					addXrefToClass(owlClass, xrefs);
+					addXrefToClass(owlClass, xrefList);
 				});
 	}
 	
-	public void addXrefToClass(OWLClass owlClass, Stream<IRI> xrefIRIs) {
+	public void addXrefToClass(OWLClass owlClass, List<IRI> xrefList) {
 		OWLAnnotationProperty annotationProperty = factory.getOWLAnnotationProperty(Constants.GO_HAS_DX_XREF);
 		List<OWLAxiom> axioms = new LinkedList<OWLAxiom>();
-		xrefIRIs.forEach(iri -> {
+		for (IRI iri : xrefList) {
 			axioms.add(createAnnotationForClass(owlClass, annotationProperty, iri.getIRIString()));
-		});
+		}
 		manager.addAxioms(this.ontology, axioms.stream());
 	}
 	
@@ -176,7 +178,7 @@ public abstract class AbstractXrefClient implements IXrefClient {
 		return annotationAxiom;
 	}
 
-	protected abstract List<IRI> search(OWLAnnotation annotation) throws SocketException;
+	protected abstract List<IRI> searchXref(OWLAnnotation annotation) throws SocketException;
 	
 	public List<String> getOntologiesFilter() {
 		return ontologiesFilter;

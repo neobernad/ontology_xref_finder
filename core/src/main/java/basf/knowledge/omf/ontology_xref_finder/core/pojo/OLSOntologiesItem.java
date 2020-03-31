@@ -6,11 +6,11 @@ import javax.json.bind.annotation.JsonbProperty;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IPojoMapper;
+import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IPojoMapperOntologyMetadata;
 import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyMetadata;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OLSOntologiesItem implements IPojoMapper {
+public class OLSOntologiesItem implements IPojoMapperOntologyMetadata {
 	@JsonbProperty("ontologyId")
 	private String ontologyId;
 	@JsonbProperty("loaded")

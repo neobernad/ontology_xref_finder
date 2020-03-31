@@ -16,81 +16,14 @@ import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
-import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IPojoMapper;
+import basf.knowledge.omf.ontology_xref_finder.core.endpoints.OLSEndpoint;
 import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyMetadata;
-import basf.knowledge.omf.ontology_xref_finder.core.pojo.OLSOntologies;
+import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTerm;
 import basf.knowledge.omf.ontology_xref_finder.core.pojo.OLSOntologiesEmbedded;
-import basf.knowledge.omf.ontology_xref_finder.core.pojo.OLSOntologiesItem;
 import basf.knowledge.omf.ontology_xref_finder.core.pojo.OLSSearch;
 import basf.knowledge.omf.ontology_xref_finder.core.pojo.OLSSearchItem;
-import basf.knowledge.omf.ontology_xref_finder.core.utils.APIQueryParams;
+import basf.knowledge.omf.ontology_xref_finder.core.pojo.OLSTermsEmbedded;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.PojoMapper;
-
-// TODO Refactor this in a new package with some interface
-class OLSEndpoint {
-	private static final String SEARCH_CTXT = "/search";
-	private static final String PARAM_PAGE = "page";
-	private static final String PARAM_SIZE = "size";
-	private static final String ONTOLOGY_CTXT = "/ontologies";
-	private static final String PARAM_QUERY_FIELDS = "queryFields";
-	private static final String PARAM_ROWS = "rows";
-	private static final String PARAM_ONTOLOGY = "ontology";
-	private static final String ENABLE_EXACT_MATCH = "exact=on";
-	
-	public static APIQueryParams getOntologies(Integer page, Integer size) {
-		APIQueryParams apiQueryparams = new APIQueryParams();
-		apiQueryparams.setContextPath(ONTOLOGY_CTXT);
-		
-		if (page != null && page > 0) {
-			apiQueryparams.addQueryParam(PARAM_PAGE, page); // page=0
-		}
-		
-		if (size != null && size > 0) {
-			apiQueryparams.addQueryParam(PARAM_SIZE, size); // size=2
-		}
-		
-		return apiQueryparams;
-	}
-
-	/**
-	 * Creates an APIQueryParams object to generate an API call that searches
-	 * through all the ontologies in the OLS.
-	 * @param query Query parameter (e.g: Destillation)
-	 * @param queryFields Fields to consider in the search (e.g: label,synonym)
-	 * @param rows Maximum number of results (e.g: 2)
-	 * @return An APIQueryParams wrapping the request parameters.
-	 */
-	public static APIQueryParams search(String query, String queryFields, Integer rows) {
-		return search(query, queryFields, rows, null);
-	}
-	
-	/**
-	 * Creates an APIQueryParams object to generate an API call that searches
-	 * through a specific set of ontologies in the OLS.
-	 * @param query Query parameter (e.g: Destillation)
-	 * @param queryFields Fields to consider in the search (e.g: label,synonym)
-	 * @param rows Maximum number of results (e.g: 2)
-	 * @param ontologiesFilter List of ontologies to consider in the search (e.g: doid,clo)
-	 * @return An APIQueryParams wrapping the request parameters.
-	 */
-	public static APIQueryParams search(String query, String queryFields, Integer rows, List<String> ontologiesFilter) {
-		APIQueryParams apiQueryparams = new APIQueryParams();
-		apiQueryparams.setContextPath(SEARCH_CTXT);
-		apiQueryparams.addQueryParam("q", query); // q=Destillation
-		if (queryFields != null && !query.isEmpty()) {
-			apiQueryparams.addQueryParam(PARAM_QUERY_FIELDS, queryFields); // queryFields=label,synonym
-		}
-		if (rows != null && rows > 0) {
-			apiQueryparams.addQueryParam(PARAM_ROWS, rows); // rows=2
-		}
-		
-		if (ontologiesFilter != null && !ontologiesFilter.isEmpty()) {
-			apiQueryparams.addQueryParam(PARAM_ONTOLOGY, String.join(",", ontologiesFilter)); // ontology=doid,clo
-		}
-
-		return apiQueryparams;
-	}
-}
 
 public class OLSXrefClient extends AbstractXrefClient {
 	private static final Logger LOGGER = Logger.getLogger(OLSXrefClient.class.getName());
@@ -116,7 +49,7 @@ public class OLSXrefClient extends AbstractXrefClient {
 	}
 
 	@Override
-	protected List<IRI> search(OWLAnnotation annotation) throws SocketException {
+	protected List<IRI> searchXref(OWLAnnotation annotation) throws SocketException {
 		OWLLiteral literal = annotation.getValue().asLiteral().get();
 		String literalValue = literal.getLiteral();
 		WebTarget client = createClient(OLSEndpoint.search(literalValue,
@@ -162,6 +95,21 @@ public class OLSXrefClient extends AbstractXrefClient {
 		List<OntologyMetadata> result = pojoMapper.map(olsOntologiesEmbedded);
 		return result;
 		
+	}
+
+	@Override
+	public List<OntologyTerm> getTerm(IRI iri) throws SocketException {
+		WebTarget client = createClient(OLSEndpoint.getTerm(iri));
+		Response response = client.request(MediaType.APPLICATION_JSON).get();
+//		 System.out.println(response.readEntity(String.class));
+		if (Status.OK.getStatusCode() != response.getStatus()) {
+			String error = "Could not process request, received status '" + response.getStatus() + "'";
+			LOGGER.warning(error);
+			throw new SocketException(error);
+		}
+		OLSTermsEmbedded olsTermEmbedded = response.readEntity(OLSTermsEmbedded.class);
+		List<OntologyTerm> result = pojoMapper.map(olsTermEmbedded);
+		return result;
 	}
 
 }

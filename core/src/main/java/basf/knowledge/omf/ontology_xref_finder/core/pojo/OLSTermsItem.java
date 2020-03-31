@@ -1,21 +1,21 @@
 package basf.knowledge.omf.ontology_xref_finder.core.pojo;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.json.bind.annotation.JsonbProperty;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IPojoMapperOntologyTerm;
+import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyMetadata;
+import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTerm;
+import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTermSynonym;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OLSSearchItem {
-	@JsonbProperty("id")
-	private String id;
+public class OLSTermsItem implements IPojoMapperOntologyTerm {
 	@JsonbProperty("iri")
 	private String iri;
-	@JsonbProperty("short_form")
-	private String short_form;
-	@JsonbProperty("obo_id")
-	private String obo_id;
 	@JsonbProperty("label")
 	private String label;
 	@JsonbProperty("description")
@@ -24,18 +24,12 @@ public class OLSSearchItem {
 	private String ontology_name;
 	@JsonbProperty("ontology_prefix")
 	private String ontology_prefix;
-
-	public OLSSearchItem() {
-
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
+	@JsonbProperty("short_form")
+	private String short_form;
+	@JsonbProperty("obo_id")
+	private String obo_id;
+	@JsonbProperty("obo_synonym")
+	private List<OLSTermsItemSynonym> obo_synonym;
 
 	public String getIri() {
 		return iri;
@@ -43,22 +37,6 @@ public class OLSSearchItem {
 
 	public void setIri(String iri) {
 		this.iri = iri;
-	}
-
-	public String getShort_form() {
-		return short_form;
-	}
-
-	public void setShort_form(String short_form) {
-		this.short_form = short_form;
-	}
-
-	public String getObo_id() {
-		return obo_id;
-	}
-
-	public void setObo_id(String obo_id) {
-		this.obo_id = obo_id;
 	}
 
 	public String getLabel() {
@@ -93,15 +71,39 @@ public class OLSSearchItem {
 		this.ontology_prefix = ontology_prefix;
 	}
 
+	public String getShort_form() {
+		return short_form;
+	}
+
+	public void setShort_form(String short_form) {
+		this.short_form = short_form;
+	}
+
+	public String getObo_id() {
+		return obo_id;
+	}
+
+	public void setObo_id(String obo_id) {
+		this.obo_id = obo_id;
+	}
+
+	public List<OLSTermsItemSynonym> getObo_synonym() {
+		return obo_synonym;
+	}
+
+	public void setObo_synonym(List<OLSTermsItemSynonym> obo_synonym) {
+		this.obo_synonym = obo_synonym;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((iri == null) ? 0 : iri.hashCode());
 		result = prime * result + ((label == null) ? 0 : label.hashCode());
 		result = prime * result + ((obo_id == null) ? 0 : obo_id.hashCode());
+		result = prime * result + ((obo_synonym == null) ? 0 : obo_synonym.hashCode());
 		result = prime * result + ((ontology_name == null) ? 0 : ontology_name.hashCode());
 		result = prime * result + ((ontology_prefix == null) ? 0 : ontology_prefix.hashCode());
 		result = prime * result + ((short_form == null) ? 0 : short_form.hashCode());
@@ -116,16 +118,11 @@ public class OLSSearchItem {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		OLSSearchItem other = (OLSSearchItem) obj;
+		OLSTermsItem other = (OLSTermsItem) obj;
 		if (description == null) {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
 			return false;
 		if (iri == null) {
 			if (other.iri != null)
@@ -141,6 +138,11 @@ public class OLSSearchItem {
 			if (other.obo_id != null)
 				return false;
 		} else if (!obo_id.equals(other.obo_id))
+			return false;
+		if (obo_synonym == null) {
+			if (other.obo_synonym != null)
+				return false;
+		} else if (!obo_synonym.equals(other.obo_synonym))
 			return false;
 		if (ontology_name == null) {
 			if (other.ontology_name != null)
@@ -163,14 +165,8 @@ public class OLSSearchItem {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("OLSSearchItem [id=");
-		builder.append(id);
-		builder.append(", iri=");
+		builder.append("OLSTermsItem [iri=");
 		builder.append(iri);
-		builder.append(", short_form=");
-		builder.append(short_form);
-		builder.append(", obo_id=");
-		builder.append(obo_id);
 		builder.append(", label=");
 		builder.append(label);
 		builder.append(", description=");
@@ -179,8 +175,36 @@ public class OLSSearchItem {
 		builder.append(ontology_name);
 		builder.append(", ontology_prefix=");
 		builder.append(ontology_prefix);
+		builder.append(", short_form=");
+		builder.append(short_form);
+		builder.append(", obo_id=");
+		builder.append(obo_id);
+		builder.append(", obo_synonym=");
+		builder.append(obo_synonym);
 		builder.append("]");
 		return builder.toString();
 	}
-	
+
+	@Override
+	public OntologyTerm mapToOntologyTerm() {
+		List<OntologyTermSynonym> synonyms = new LinkedList<OntologyTermSynonym>();
+		if (obo_synonym != null) {
+			for (OLSTermsItemSynonym termSynonym : obo_synonym) {
+				synonyms.add(termSynonym.mapToOntologyTermSynonym());
+			}
+		}
+		
+		OntologyTerm ontologyTerm = new OntologyTerm.Builder()
+				.withIri(iri)
+				.withLabel(label)
+				.withDescription(description)
+				.withShortForm(short_form)
+				.withOboId(obo_id)
+				.withOntologyName(ontology_name)
+				.withOntologyPrefix(ontology_prefix)
+				.withOboSynonyms(synonyms)
+				.build();
+		return ontologyTerm;
+	}
+
 }
