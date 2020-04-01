@@ -6,7 +6,7 @@
 
 	<groupId>basf.knowledge.omf</groupId>
 	<artifactId>ontology_xref_finder</artifactId>
-	<version>0.0.1</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 
 	<name>ontology_xref_finder</name>
@@ -85,7 +85,7 @@
 			<artifactId>jgoodies-forms</artifactId>
 			<version>1.8.0</version>
 		</dependency>
-		<!-- To avoid OLSAPI org.slf4j.impl.StaticLoggerBinder error  -->
+		<!-- To avoid OLSAPI org.slf4j.impl.StaticLoggerBinder error -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -96,7 +96,6 @@
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.21</version>
 		</dependency>
-
 	</dependencies>
 	<modules>
 		<module>core</module>
