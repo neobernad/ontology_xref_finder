@@ -177,10 +177,19 @@ public abstract class AbstractXrefClient implements IXrefClient {
 		}
 		manager.addAxioms(this.ontology, axioms.stream());
 	}
+	
+	private OWLAnnotation createOwlAnnotationDBXref(IRI xrefIri) {
+		OWLAnnotationProperty dbxref = factory.getOWLAnnotationProperty(Constants.GO_HAS_DB_XREF);
+		OWLAnnotation xrefAnnotation = factory.getOWLAnnotation(dbxref,
+				factory.getOWLLiteral(xrefIri.getIRIString()));
+		return xrefAnnotation;
+		
+	}
 
 	public void addSynonymsToClass(OWLClass owlClass, List<OntologyTerm> ontologyTerms, IRI xref) {
 		for (OntologyTerm ontologyTerm : ontologyTerms) {
 			List<OWLAxiom> axioms = new LinkedList<OWLAxiom>();
+			// Add term synonyms as synonyms of owlClass
 			for (OntologySynonym synonym : ontologyTerm.getObo_synonym()) {
 				IRI scopeAnnotationProperty = null;
 				if (synonym.getScope().equals(Constants.HAS_EXACT_SYN)) {
@@ -195,10 +204,7 @@ public abstract class AbstractXrefClient implements IXrefClient {
 						factory.getOWLLiteral(synonym.getName()));
 				
 				if (!existsAnnotationOnClass(owlClass, synonymAnnotation)) {
-					OWLAnnotationProperty dbxref = factory.getOWLAnnotationProperty(Constants.GO_HAS_DB_XREF);
-					OWLAnnotation xrefAnnotation = factory.getOWLAnnotation(dbxref,
-							factory.getOWLLiteral(xref.getIRIString()));
-					
+					OWLAnnotation xrefAnnotation = createOwlAnnotationDBXref(xref);
 					OWLAnnotationAssertionAxiom annotationAxiom = factory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(),
 							synonymAnnotation, Collections.singletonList(xrefAnnotation));
 					axioms.add(annotationAxiom);
@@ -210,9 +216,16 @@ public abstract class AbstractXrefClient implements IXrefClient {
 						LOGGER.warning("Skipping a synonym already present '" + synonymAnnotation + "'");
 					}
 				}*/
-
-				
-
+			}
+			// Add term label as a synonym (generic) of owlClass
+			OWLAnnotation termLabelAsAnnotation = factory.getOWLAnnotation(
+					factory.getOWLAnnotationProperty(Constants.GO_HAS_SYN),
+					factory.getOWLLiteral(ontologyTerm.getLabel()));
+			if (!existsAnnotationOnClass(owlClass, termLabelAsAnnotation)) {
+				OWLAnnotation xrefAnnotation = createOwlAnnotationDBXref(xref);
+				OWLAnnotationAssertionAxiom annotationAxiom = factory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(),
+						termLabelAsAnnotation, Collections.singletonList(xrefAnnotation));
+				axioms.add(annotationAxiom);
 			}
 			manager.addAxioms(this.ontology, axioms.stream());
 		}
