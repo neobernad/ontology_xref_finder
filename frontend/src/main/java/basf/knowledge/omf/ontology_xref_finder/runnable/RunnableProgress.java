@@ -10,6 +10,7 @@ import javax.swing.JProgressBar;
 
 import org.semanticweb.owlapi.model.IRI;
 
+import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTerm;
 import basf.knowledge.omf.ontology_xref_finder.core.xrefclient.AbstractXrefClient;
 
 /**
@@ -44,15 +45,18 @@ public class RunnableProgress implements Runnable, RunnableProgressPerformer {
 			try {
 				Stream<IRI> xrefStream = xrefClient.findXrefByLabel(owlClass);
 				List<IRI> xrefList = xrefStream.collect(Collectors.toList());
-				xrefClient.addXrefToClass(owlClass, xrefList);
 				progressBar.setValue(progressBar.getValue() + 1);
-			} catch (Exception e) {
+				// xrefClient.addXrefToClass(owlClass, xrefList);
+				for (IRI xrefIri : xrefList) {
+					List<OntologyTerm> ontologyTerms = xrefClient.getTerm(xrefIri);
+					xrefClient.addSynonymsToClass(owlClass, ontologyTerms, xrefIri);
+				}
+			} catch (SocketException e) {
 				progressError(e.getMessage());
 				Thread.currentThread().interrupt(); // Die! >:(
 			}
 		});
 		progressFinished();
-
 	}
 
 	@Override

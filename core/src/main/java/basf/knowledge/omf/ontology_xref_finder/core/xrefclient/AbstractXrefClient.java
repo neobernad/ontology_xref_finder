@@ -71,7 +71,7 @@ public abstract class AbstractXrefClient implements IXrefClient {
 		for (QueryParam qp : apiQueryParams.getQueryParams()) {
 			target = target.queryParam(qp.getQuery(), qp.getParam());
 		}
-		if (Constants.DEV_MODE) {
+		if (Constants.DEBUG_MODE) {
 			LOGGER.info(String.format("Calling endpoint %s", target.getUri()));
 		}
 		return target;
@@ -210,14 +210,14 @@ public abstract class AbstractXrefClient implements IXrefClient {
 					OWLAnnotationAssertionAxiom annotationAxiom = factory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(),
 							synonymAnnotation, Collections.singletonList(xrefAnnotation));
 					axioms.add(annotationAxiom);
-//					if (Constants.DEV_MODE) {
-//						LOGGER.info("Adding synonym axiom '" + annotationAxiom + "'");
-//					}
-				} /*else {
-					if (Constants.DEV_MODE) {
+					if (Constants.DEBUG_MODE) {
+						LOGGER.info("Adding synonym axiom '" + annotationAxiom + "'");
+					}
+				} else {
+					if (Constants.DEBUG_MODE) {
 						LOGGER.warning("Skipping a synonym already present '" + synonymAnnotation + "'");
 					}
-				}*/
+				}
 			}
 			// Add term label as a synonym (generic) of owlClass
 			OWLAnnotation termLabelAsAnnotation = factory.getOWLAnnotation(
