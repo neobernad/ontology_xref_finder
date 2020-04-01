@@ -7,6 +7,7 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IOntologySaver;
 import basf.knowledge.omf.ontology_xref_finder.core.parser.ArgumentParser;
 import basf.knowledge.omf.ontology_xref_finder.core.service.OntologySaver;
+import basf.knowledge.omf.ontology_xref_finder.core.service.XrefProcessReporterLogger;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.OWLFormat;
 import basf.knowledge.omf.ontology_xref_finder.core.xrefclient.AbstractXrefClient;
 import basf.knowledge.omf.ontology_xref_finder.core.xrefclient.OLSXrefClient;
@@ -46,6 +47,8 @@ public class App {
 		 * Process Xrefs
 		 */
 		xrefClient.processOntologyXrefs();
+		XrefProcessReporterLogger report = xrefClient.getXrefProcessReporter();
+		report.getReport();
 		ontologySaver.saveOntology(xrefClient.getOntology(), argParser.getOutputOntologyFilename(), OWLFormat.OWL);
 
 	}

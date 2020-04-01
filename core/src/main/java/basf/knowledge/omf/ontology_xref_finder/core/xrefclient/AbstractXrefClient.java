@@ -30,6 +30,7 @@ import org.semanticweb.owlapi.search.EntitySearcher;
 import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IXrefClient;
 import basf.knowledge.omf.ontology_xref_finder.core.model.OntologySynonym;
 import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTerm;
+import basf.knowledge.omf.ontology_xref_finder.core.service.XrefProcessReporterLogger;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.APIQueryParams;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.Constants;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.QueryParam;
@@ -45,6 +46,7 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	protected Boolean noDbXref = false;
 	protected final OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 	protected final OWLDataFactory factory = new OWLDataFactoryImpl();
+	protected final XrefProcessReporterLogger xrefProcessReporter = new XrefProcessReporterLogger();
 
 	public AbstractXrefClient(String url, File ontologyFile, Integer max_xrefs) throws OWLOntologyCreationException {
 		this.url = url;
@@ -121,7 +123,11 @@ public abstract class AbstractXrefClient implements IXrefClient {
 		EntitySearcher.getAnnotations(owlClass, ontology).forEach(annotation -> {
 			if (annotation.getProperty().getIRI().equals(wantedIRI)) {
 				try {
-					xrefIRIs.addAll(searchXref(annotation));
+					List<IRI> xrefsIri = searchXref(annotation);
+					if (xrefsIri.isEmpty()) {
+						xrefProcessReporter.addNoXrefFound(owlClass.getIRI(), annotation.getValue().toString());
+					}
+					xrefIRIs.addAll(xrefsIri);
 				} catch (SocketException e) {
 					throw new RuntimeException(e.getMessage());
 				}
@@ -157,6 +163,9 @@ public abstract class AbstractXrefClient implements IXrefClient {
 				// xrefClient.addXrefToClass(owlClass, xrefList);
 				for (IRI xrefIri : xrefList) {
 					List<OntologyTerm> ontologyTerms = getTerm(xrefIri);
+					if (ontologyTerms.isEmpty()) {
+						xrefProcessReporter.addClassesWithoutXrefData(owlClass.getIRI(), xrefIri.getIRIString());
+					}
 					addSynonymsToClass(owlClass, ontologyTerms, xrefIri);
 				}
 			} catch (SocketException e) {
@@ -189,33 +198,37 @@ public abstract class AbstractXrefClient implements IXrefClient {
 			if (!this.noDbXref) { // Add xref IRI to the annotation?
 				xrefAnnotation = createOwlAnnotationDBXref(xref);
 			}
-			// Add term synonyms as synonyms of owlClass
-			for (OntologySynonym synonym : ontologyTerm.getObo_synonym()) {
-				IRI scopeAnnotationProperty = null;
-				// TODO: Refactor this. Some OWLUtils class that returns the correct IRI
-				if (synonym.getScope().equals(Constants.HAS_EXACT_SYN)) {
-					scopeAnnotationProperty = Constants.GO_HAS_EXACT_SYN;
-				} else if (synonym.getScope().equals(Constants.HAS_NARROW_SYN)) {
-					scopeAnnotationProperty = Constants.GO_HAS_NARROW_SYN;
-				} else if (synonym.getScope().equals(Constants.HAS_RELATED_SYN)) {
-					scopeAnnotationProperty = Constants.GO_HAS_RELATED_SYN;
-				} else {
-					scopeAnnotationProperty = Constants.GO_HAS_SYN;
-				}
-				OWLAnnotationProperty scope = factory.getOWLAnnotationProperty(scopeAnnotationProperty);
-				OWLAnnotation synonymAnnotation = factory.getOWLAnnotation(scope,
-						factory.getOWLLiteral(synonym.getName()));
-				
-				if (!existsAnnotationOnClass(owlClass, synonymAnnotation)) {
-					OWLAnnotationAssertionAxiom annotationAxiom = factory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(),
-							synonymAnnotation, Collections.singletonList(xrefAnnotation));
-					axioms.add(annotationAxiom);
-					if (Constants.DEBUG_MODE) {
-						LOGGER.info("Adding synonym axiom '" + annotationAxiom + "'");
+			if (ontologyTerm.getObo_synonym().isEmpty()) {
+				xrefProcessReporter.addClassesWithoutXrefSynonyms(owlClass.getIRI(), xref.getIRIString());
+			} else {
+				// Add term synonyms as synonyms of owlClass
+				for (OntologySynonym synonym : ontologyTerm.getObo_synonym()) {
+					IRI scopeAnnotationProperty = null;
+					// TODO: Refactor this. Some OWLUtils class that returns the correct IRI
+					if (synonym.getScope().equals(Constants.HAS_EXACT_SYN)) {
+						scopeAnnotationProperty = Constants.GO_HAS_EXACT_SYN;
+					} else if (synonym.getScope().equals(Constants.HAS_NARROW_SYN)) {
+						scopeAnnotationProperty = Constants.GO_HAS_NARROW_SYN;
+					} else if (synonym.getScope().equals(Constants.HAS_RELATED_SYN)) {
+						scopeAnnotationProperty = Constants.GO_HAS_RELATED_SYN;
+					} else {
+						scopeAnnotationProperty = Constants.GO_HAS_SYN;
 					}
-				} else {
-					if (Constants.DEBUG_MODE) {
-						LOGGER.warning("Skipping a synonym already present '" + synonymAnnotation + "'");
+					OWLAnnotationProperty scope = factory.getOWLAnnotationProperty(scopeAnnotationProperty);
+					OWLAnnotation synonymAnnotation = factory.getOWLAnnotation(scope,
+							factory.getOWLLiteral(synonym.getName()));
+					
+					if (!existsAnnotationOnClass(owlClass, synonymAnnotation)) {
+						OWLAnnotationAssertionAxiom annotationAxiom = factory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(),
+								synonymAnnotation, Collections.singletonList(xrefAnnotation));
+						axioms.add(annotationAxiom);
+						if (Constants.DEBUG_MODE) {
+							LOGGER.info("Adding synonym axiom '" + annotationAxiom + "'");
+						}
+					} else {
+						if (Constants.DEBUG_MODE) {
+							LOGGER.warning("Skipping a synonym already present '" + synonymAnnotation + "'");
+						}
 					}
 				}
 			}
@@ -263,6 +276,11 @@ public abstract class AbstractXrefClient implements IXrefClient {
 
 	public void setNoDbXref(Boolean noDbXref) {
 		this.noDbXref = noDbXref;
+	}
+	
+
+	public XrefProcessReporterLogger getXrefProcessReporter() {
+		return xrefProcessReporter;
 	}
 
 	@Override

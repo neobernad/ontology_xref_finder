@@ -10639,7 +10639,12 @@ Environmental exposures include those imposed by natural environments, experimen
         <obo:IAO_0000115 xml:lang="en">Source of energy used to pulled an implement.</obo:IAO_0000115>
         <rdfs:label xml:lang="en">implement traction source</rdfs:label>
     </owl:Class>
-    
+
+    <!-- Test class (no xref found) http://purl.obolibrary.org/obo/AGRO_00000239877 -->
+    <owl:Class rdf:about="http://purl.obolibrary.org/obo/AGRO_00000239877">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+        <rdfs:label xml:lang="en">asdddsadsadsafgahgjeahjgheajgejahgakejhgeajgaegeag</rdfs:label>
+    </owl:Class>
 
 
     <!-- http://purl.obolibrary.org/obo/AGRO_00000238 -->
