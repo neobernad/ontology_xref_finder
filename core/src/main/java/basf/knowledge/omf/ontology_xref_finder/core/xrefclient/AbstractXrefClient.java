@@ -6,9 +6,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -45,13 +42,11 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	protected OWLOntology ontology;
 	protected Integer max_xrefs; // Maximum number of xrefs to add per term
 	protected List<String> ontologiesFilter = null; // Ontologies considered in a search
+	protected Boolean noDbXref = false;
 	protected final OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 	protected final OWLDataFactory factory = new OWLDataFactoryImpl();
 
 	public AbstractXrefClient(String url, File ontologyFile, Integer max_xrefs) throws OWLOntologyCreationException {
-		LOGGER.setLevel( Level.FINE );
-		LOGGER.addHandler(new java.util.logging.ConsoleHandler());
-		LOGGER.setUseParentHandlers(false);
 		this.url = url;
 		this.ontology = manager.loadOntologyFromOntologyDocument(ontologyFile);
 		this.max_xrefs = max_xrefs;
@@ -153,6 +148,7 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	 * class rdfs:label. The annotations are added to this.ontology.
 	 */
 	public void processOntologyXrefs() {
+		LOGGER.info("Configuration is: " + toString());
 		LOGGER.info("Detected '" + getNumberOfClasses() + "' classes in input ontology.");
 		this.ontology.classesInSignature().forEach(owlClass -> {
 			try {
@@ -189,13 +185,20 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	public void addSynonymsToClass(OWLClass owlClass, List<OntologyTerm> ontologyTerms, IRI xref) {
 		for (OntologyTerm ontologyTerm : ontologyTerms) {
 			List<OWLAxiom> axioms = new LinkedList<OWLAxiom>();
+			OWLAnnotation xrefAnnotation = null;
+			if (!this.noDbXref) { // Add xref IRI to the annotation?
+				xrefAnnotation = createOwlAnnotationDBXref(xref);
+			}
 			// Add term synonyms as synonyms of owlClass
 			for (OntologySynonym synonym : ontologyTerm.getObo_synonym()) {
 				IRI scopeAnnotationProperty = null;
+				// TODO: Refactor this. Some OWLUtils class that returns the correct IRI
 				if (synonym.getScope().equals(Constants.HAS_EXACT_SYN)) {
 					scopeAnnotationProperty = Constants.GO_HAS_EXACT_SYN;
 				} else if (synonym.getScope().equals(Constants.HAS_NARROW_SYN)) {
 					scopeAnnotationProperty = Constants.GO_HAS_NARROW_SYN;
+				} else if (synonym.getScope().equals(Constants.HAS_RELATED_SYN)) {
+					scopeAnnotationProperty = Constants.GO_HAS_RELATED_SYN;
 				} else {
 					scopeAnnotationProperty = Constants.GO_HAS_SYN;
 				}
@@ -204,7 +207,6 @@ public abstract class AbstractXrefClient implements IXrefClient {
 						factory.getOWLLiteral(synonym.getName()));
 				
 				if (!existsAnnotationOnClass(owlClass, synonymAnnotation)) {
-					OWLAnnotation xrefAnnotation = createOwlAnnotationDBXref(xref);
 					OWLAnnotationAssertionAxiom annotationAxiom = factory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(),
 							synonymAnnotation, Collections.singletonList(xrefAnnotation));
 					axioms.add(annotationAxiom);
@@ -222,7 +224,6 @@ public abstract class AbstractXrefClient implements IXrefClient {
 					factory.getOWLAnnotationProperty(Constants.GO_HAS_SYN),
 					factory.getOWLLiteral(ontologyTerm.getLabel()));
 			if (!existsAnnotationOnClass(owlClass, termLabelAsAnnotation)) {
-				OWLAnnotation xrefAnnotation = createOwlAnnotationDBXref(xref);
 				OWLAnnotationAssertionAxiom annotationAxiom = factory.getOWLAnnotationAssertionAxiom(owlClass.getIRI(),
 						termLabelAsAnnotation, Collections.singletonList(xrefAnnotation));
 				axioms.add(annotationAxiom);
@@ -255,5 +256,32 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	public void setOntologiesFilter(List<String> ontologiesFilter) {
 		this.ontologiesFilter = ontologiesFilter;
 	}
+
+	public Boolean getNoDbXref() {
+		return noDbXref;
+	}
+
+	public void setNoDbXref(Boolean noDbXref) {
+		this.noDbXref = noDbXref;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AbstractXrefClient [url=");
+		builder.append(url);
+		builder.append(", ontology=");
+		builder.append(ontology.getOntologyID().getOntologyIRI());
+		builder.append(", max_xrefs=");
+		builder.append(max_xrefs);
+		builder.append(", ontologiesFilter=");
+		builder.append(ontologiesFilter);
+		builder.append(", noDbXref=");
+		builder.append(noDbXref);
+		builder.append("]");
+		return builder.toString();
+	}
+	
+	
 
 }

@@ -47,7 +47,7 @@ public class FindXrefTest extends TestCase {
 		// File outputOnt = File.createTempFile("output", "owl");
 		File outputOnt = new File("C:/Users/Neo/Desktop/output.owl");
 		// outputOnt.deleteOnExit();
-		AbstractXrefClient xrefClient = new OLSXrefClient(argParser.getOlsURL(), ddphenoOnt, 5);
+		AbstractXrefClient xrefClient = new OLSXrefClient(argParser.getOlsURL(), ddphenoOnt, 3);
 
 		xrefClient.getOntology().classesInSignature().forEach(owlClass -> {
 			List<IRI> xrefList = null;

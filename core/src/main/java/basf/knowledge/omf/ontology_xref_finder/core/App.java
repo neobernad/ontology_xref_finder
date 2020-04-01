@@ -35,6 +35,7 @@ public class App {
 			xrefClient = new OLSXrefClient(argParser.getOlsURL(), argParser.getInputOntologyFilename(),
 					argParser.getMaxXrefs());
 			xrefClient.setOntologiesFilter(argParser.getOntologiesFilter());
+			xrefClient.setNoDbXref(argParser.getNoDbXref());
 		} catch (OWLOntologyCreationException e) {
 			LOGGER.info(e.getMessage());
 			e.printStackTrace();

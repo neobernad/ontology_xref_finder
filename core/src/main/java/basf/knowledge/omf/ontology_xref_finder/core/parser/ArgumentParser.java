@@ -20,16 +20,19 @@ class ArgumentsKeys {
 	public static final String OUTPUT_ONT_L = "output";
 	public static final String MAX_XREFS_S = "mx";
 	public static final String MAX_XREFS_L = "max_xrefs";
-	public static final String OLS_URL_S = null; // No short argument for this parameter
+	public static final String OLS_URL_S = null;
 	public static final String OLS_URL_L = "ols_url";
 	public static final String ONTOLOGIES_FILTER_S = null; // No short argument for this parameter
 	public static final String ONTOLOGIES_FILTER_L = "ontologies";
+	public static final String NO_DBXREF_S = null;
+	public static final String NO_DBXREF_L = "no_dbxref";
 }
 
 class ArgumentsDefaultValues {
 	public static final Integer MAX_XREFS_DEFAULT = 1;
 	public static final String OLS_URL_DEFAULT = "https://www.ebi.ac.uk/ols/api";
 	public static final List<String> ONTOLOGIES_FILTER_DEFAULT = new LinkedList<String>();
+	public static final Boolean NO_DBXREF = false;
 }
 
 public class ArgumentParser {
@@ -39,6 +42,7 @@ public class ArgumentParser {
 	private String olsURL = ArgumentsDefaultValues.OLS_URL_DEFAULT;
 	private Integer maxXrefs = ArgumentsDefaultValues.MAX_XREFS_DEFAULT;
 	private List<String> ontologiesFilter = ArgumentsDefaultValues.ONTOLOGIES_FILTER_DEFAULT;
+	private Boolean noDbXref = ArgumentsDefaultValues.NO_DBXREF;
 	private Options options = new Options();
 
 	public ArgumentParser() {
@@ -102,6 +106,11 @@ public class ArgumentParser {
 			this.olsURL = cmd.getOptionValue(ArgumentsKeys.OLS_URL_L);
 		}
 		
+		this.noDbXref = ArgumentsDefaultValues.NO_DBXREF;
+		if (cmd.hasOption(ArgumentsKeys.NO_DBXREF_L)) {
+			this.noDbXref = true;
+		}
+		
 		return true;
 	}
 
@@ -126,6 +135,12 @@ public class ArgumentParser {
 		ontologiesFilter.setRequired(false);
 		options.addOption(ontologiesFilter);
 		
+		Option noDbxref = new Option(ArgumentsKeys.NO_DBXREF_S, ArgumentsKeys.NO_DBXREF_L, false,
+				"If specified, annotations are NOT annotated with the source cross-referenced class where the annotation comes from.");
+		noDbxref.setRequired(false);
+		options.addOption(noDbxref);
+		
+		
 		Option olsURL = new Option(ArgumentsKeys.OLS_URL_S, ArgumentsKeys.OLS_URL_L, true,
 				"URL to the OWL API (e.g. https://www.ebi.ac.uk/ols/api)");
 		olsURL.setRequired(false);
@@ -148,6 +163,14 @@ public class ArgumentParser {
 	}
 	
 
+	public static Logger getLogger() {
+		return LOGGER;
+	}
+
+	public Boolean getNoDbXref() {
+		return noDbXref;
+	}
+
 	public List<String> getOntologiesFilter() {
 		return ontologiesFilter;
 	}
@@ -169,6 +192,8 @@ public class ArgumentParser {
 		builder.append(maxXrefs);
 		builder.append(", ontologiesFilter=");
 		builder.append(ontologiesFilter);
+		builder.append(", noDbXref=");
+		builder.append(noDbXref);
 		builder.append(", options=");
 		builder.append(options);
 		builder.append("]");

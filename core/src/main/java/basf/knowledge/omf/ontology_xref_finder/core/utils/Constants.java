@@ -9,10 +9,12 @@ public enum Constants {
 	public static IRI GO_HAS_DB_XREF = IRI.create("http://www.geneontology.org/formats/oboInOwl#hasDbXref");
 	public static IRI GO_HAS_EXACT_SYN = IRI.create("http://www.geneontology.org/formats/oboInOWL#hasExactSynonym");
 	public static IRI GO_HAS_NARROW_SYN = IRI.create("http://www.geneontology.org/formats/oboInOWL#hasNarrowSynonym");
+	public static IRI GO_HAS_RELATED_SYN = IRI.create("http://www.geneontology.org/formats/oboInOWL#hasRelatedSynonym");
 	public static IRI GO_HAS_SYN = IRI.create("http://www.geneontology.org/formats/oboInOwl#hasSynonym");
 	
 	public static String HAS_EXACT_SYN = "hasExactSynonym";
 	public static String HAS_NARROW_SYN = "hasNarrowSynonym";
+	public static String HAS_RELATED_SYN = "hasRelatedSynonym";
 	public static final boolean DEV_MODE = true;
 
 }
