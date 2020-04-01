@@ -1,17 +1,19 @@
 package basf.knowledge.omf.ontology_xref_finder.core.pojo;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.json.bind.annotation.JsonbProperty;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IPojoMapperOntologyTermSynonym;
+import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IPojoMapperOntologySynonym;
 import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTerm;
-import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTermSynonym;
+import basf.knowledge.omf.ontology_xref_finder.core.model.OntologySynonym;
+import basf.knowledge.omf.ontology_xref_finder.core.model.OntologySynonymXref;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OLSTermsItemSynonym implements IPojoMapperOntologyTermSynonym {
+public class OLSSynonym implements IPojoMapperOntologySynonym {
 	@JsonbProperty("name")
 	private String name;
 	@JsonbProperty("scope")
@@ -19,7 +21,7 @@ public class OLSTermsItemSynonym implements IPojoMapperOntologyTermSynonym {
 	@JsonbProperty("type")
 	private String type;
 	@JsonbProperty("xrefs")
-	private List<String> xrefs;
+	private List<OLSSynonymXref> xrefs;
 
 	public String getName() {
 		return name;
@@ -45,11 +47,11 @@ public class OLSTermsItemSynonym implements IPojoMapperOntologyTermSynonym {
 		this.type = type;
 	}
 
-	public List<String> getXrefs() {
+	public List<OLSSynonymXref> getXrefs() {
 		return xrefs;
 	}
 
-	public void setXrefs(List<String> xrefs) {
+	public void setXrefs(List<OLSSynonymXref> xrefs) {
 		this.xrefs = xrefs;
 	}
 
@@ -72,7 +74,7 @@ public class OLSTermsItemSynonym implements IPojoMapperOntologyTermSynonym {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		OLSTermsItemSynonym other = (OLSTermsItemSynonym) obj;
+		OLSSynonym other = (OLSSynonym) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -112,12 +114,18 @@ public class OLSTermsItemSynonym implements IPojoMapperOntologyTermSynonym {
 	}
 
 	@Override
-	public OntologyTermSynonym mapToOntologyTermSynonym() {
-		OntologyTermSynonym ontologyTermSynonym = new OntologyTermSynonym.Builder()
+	public OntologySynonym mapToOntologyTermSynonym() {
+		List<OntologySynonymXref> mappedXrefs = new LinkedList<OntologySynonymXref>();
+		if (xrefs != null) {
+			for (OLSSynonymXref synonymXref : xrefs) {
+				mappedXrefs.add(synonymXref.mapToOntologySynonymXref());
+			}
+		}
+		OntologySynonym ontologyTermSynonym = new OntologySynonym.Builder()
 				.withName(name)
 				.withScope(scope)
 				.withType(type)
-				.withXrefs(xrefs)
+				.withXrefs(mappedXrefs)
 				.build();
 		return ontologyTermSynonym;
 	}

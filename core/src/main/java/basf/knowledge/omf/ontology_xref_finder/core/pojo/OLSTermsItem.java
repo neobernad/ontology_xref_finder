@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IPojoMapperOntologyTerm;
 import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyMetadata;
 import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTerm;
-import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTermSynonym;
+import basf.knowledge.omf.ontology_xref_finder.core.model.OntologySynonym;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OLSTermsItem implements IPojoMapperOntologyTerm {
@@ -29,7 +29,7 @@ public class OLSTermsItem implements IPojoMapperOntologyTerm {
 	@JsonbProperty("obo_id")
 	private String obo_id;
 	@JsonbProperty("obo_synonym")
-	private List<OLSTermsItemSynonym> obo_synonym;
+	private List<OLSSynonym> obo_synonym;
 
 	public String getIri() {
 		return iri;
@@ -87,11 +87,11 @@ public class OLSTermsItem implements IPojoMapperOntologyTerm {
 		this.obo_id = obo_id;
 	}
 
-	public List<OLSTermsItemSynonym> getObo_synonym() {
+	public List<OLSSynonym> getObo_synonym() {
 		return obo_synonym;
 	}
 
-	public void setObo_synonym(List<OLSTermsItemSynonym> obo_synonym) {
+	public void setObo_synonym(List<OLSSynonym> obo_synonym) {
 		this.obo_synonym = obo_synonym;
 	}
 
@@ -187,9 +187,9 @@ public class OLSTermsItem implements IPojoMapperOntologyTerm {
 
 	@Override
 	public OntologyTerm mapToOntologyTerm() {
-		List<OntologyTermSynonym> synonyms = new LinkedList<OntologyTermSynonym>();
+		List<OntologySynonym> synonyms = new LinkedList<OntologySynonym>();
 		if (obo_synonym != null) {
-			for (OLSTermsItemSynonym termSynonym : obo_synonym) {
+			for (OLSSynonym termSynonym : obo_synonym) {
 				synonyms.add(termSynonym.mapToOntologyTermSynonym());
 			}
 		}

@@ -2,17 +2,13 @@ package basf.knowledge.omf.ontology_xref_finder.core.model;
 
 import java.util.List;
 
-import javax.json.bind.annotation.JsonbProperty;
+public class OntologySynonym {
 
-import basf.knowledge.omf.ontology_xref_finder.core.pojo.OLSTermsItemSynonym;
-
-public class OntologyTermSynonym {
-	
 	public static class Builder {
 		private String name;
 		private String scope;
 		private String type;
-		private List<String> xrefs;
+		private List<OntologySynonymXref> xrefs;
 
 		public Builder() {
 
@@ -28,20 +24,18 @@ public class OntologyTermSynonym {
 			return this;
 		}
 
-
 		public Builder withType(String type) {
 			this.type = type;
 			return this;
 		}
-		
-		public Builder withXrefs(List<String> xrefs) {
+
+		public Builder withXrefs(List<OntologySynonymXref> xrefs) {
 			this.xrefs = xrefs;
 			return this;
 		}
 
-
-		public OntologyTermSynonym build() {
-			OntologyTermSynonym synonym = new OntologyTermSynonym();
+		public OntologySynonym build() {
+			OntologySynonym synonym = new OntologySynonym();
 			synonym.name = this.name;
 			synonym.scope = this.scope;
 			synonym.type = this.type;
@@ -54,9 +48,9 @@ public class OntologyTermSynonym {
 	private String name;
 	private String scope;
 	private String type;
-	private List<String> xrefs;
+	private List<OntologySynonymXref> xrefs;
 
-	private OntologyTermSynonym() {
+	private OntologySynonym() {
 
 	}
 
@@ -84,11 +78,11 @@ public class OntologyTermSynonym {
 		this.type = type;
 	}
 
-	public List<String> getXrefs() {
+	public List<OntologySynonymXref> getXrefs() {
 		return xrefs;
 	}
 
-	public void setXrefs(List<String> xrefs) {
+	public void setXrefs(List<OntologySynonymXref> xrefs) {
 		this.xrefs = xrefs;
 	}
 
@@ -106,7 +100,5 @@ public class OntologyTermSynonym {
 		builder2.append("]");
 		return builder2.toString();
 	}
-	
-	
 
 }

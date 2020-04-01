@@ -24,6 +24,8 @@ public class OLSSearchItem {
 	private String ontology_name;
 	@JsonbProperty("ontology_prefix")
 	private String ontology_prefix;
+	@JsonbProperty("type")
+	private String type;
 
 	public OLSSearchItem() {
 
@@ -93,6 +95,22 @@ public class OLSSearchItem {
 		this.ontology_prefix = ontology_prefix;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	public boolean isProperty() {
+		return type.equals("property");
+	}
+	
+	public boolean isClass() {
+		return type.equals("class");
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -105,6 +123,7 @@ public class OLSSearchItem {
 		result = prime * result + ((ontology_name == null) ? 0 : ontology_name.hashCode());
 		result = prime * result + ((ontology_prefix == null) ? 0 : ontology_prefix.hashCode());
 		result = prime * result + ((short_form == null) ? 0 : short_form.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 
@@ -157,6 +176,11 @@ public class OLSSearchItem {
 				return false;
 		} else if (!short_form.equals(other.short_form))
 			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
 		return true;
 	}
 
@@ -179,8 +203,10 @@ public class OLSSearchItem {
 		builder.append(ontology_name);
 		builder.append(", ontology_prefix=");
 		builder.append(ontology_prefix);
+		builder.append(", type=");
+		builder.append(type);
 		builder.append("]");
 		return builder.toString();
 	}
-	
+
 }

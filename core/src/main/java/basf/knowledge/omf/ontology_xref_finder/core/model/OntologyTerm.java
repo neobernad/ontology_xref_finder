@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.json.bind.annotation.JsonbProperty;
 
-import basf.knowledge.omf.ontology_xref_finder.core.pojo.OLSTermsItemSynonym;
+import basf.knowledge.omf.ontology_xref_finder.core.pojo.OLSSynonym;
 
 public class OntologyTerm {
 
@@ -16,7 +16,7 @@ public class OntologyTerm {
 		private String ontology_prefix;
 		private String short_form;
 		private String obo_id;
-		private List<OntologyTermSynonym> obo_synonym;
+		private List<OntologySynonym> obo_synonym;
 
 		public Builder() {
 
@@ -57,7 +57,7 @@ public class OntologyTerm {
 			return this;
 		}
 
-		public Builder withOboSynonyms(List<OntologyTermSynonym> obo_synonym) {
+		public Builder withOboSynonyms(List<OntologySynonym> obo_synonym) {
 			this.obo_synonym = obo_synonym;
 			return this;
 		}
@@ -84,7 +84,7 @@ public class OntologyTerm {
 	private String ontology_prefix;
 	private String short_form;
 	private String obo_id;
-	private List<OntologyTermSynonym> obo_synonym;
+	private List<OntologySynonym> obo_synonym;
 
 	private OntologyTerm() {
 
@@ -146,11 +146,11 @@ public class OntologyTerm {
 		this.obo_id = obo_id;
 	}
 
-	public List<OntologyTermSynonym> getObo_synonym() {
+	public List<OntologySynonym> getObo_synonym() {
 		return obo_synonym;
 	}
 
-	public void setObo_synonym(List<OntologyTermSynonym> obo_synonym) {
+	public void setObo_synonym(List<OntologySynonym> obo_synonym) {
 		this.obo_synonym = obo_synonym;
 	}
 

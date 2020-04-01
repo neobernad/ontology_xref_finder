@@ -3023,6 +3023,12 @@
     <Declaration>
         <Datatype abbreviatedIRI="rdfs:Literal"/>
     </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOWL#hasExactSynonym"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+    </Declaration>
     <SubClassOf>
         <Class IRI="http://purl.obolibrary.org/obo/AGRO_00000237"/>
         <Class abbreviatedIRI="owl:Thing"/>
@@ -7985,16 +7991,6 @@
         <Literal xml:lang="en">Source of energy used to pulled an implement.</Literal>
     </AnnotationAssertion>
     <AnnotationAssertion>
-        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
-        <IRI>http://purl.obolibrary.org/obo/AGRO_00000237</IRI>
-        <Literal>http://purl.obolibrary.org/obo/IAO_0000119</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
-        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
-        <IRI>http://purl.obolibrary.org/obo/AGRO_00000237</IRI>
-        <Literal>http://purl.org/dc/elements/1.1/source</Literal>
-    </AnnotationAssertion>
-    <AnnotationAssertion>
         <AnnotationProperty abbreviatedIRI="rdfs:label"/>
         <IRI>http://purl.obolibrary.org/obo/AGRO_00000237</IRI>
         <Literal xml:lang="en">implement traction source</Literal>
@@ -8005,14 +8001,166 @@
         <Literal xml:lang="en">A traction that uses only human power to use an implement.</Literal>
     </AnnotationAssertion>
     <AnnotationAssertion>
-        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOWL#hasExactSynonym"/>
         <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
-        <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        <Literal>human</Literal>
     </AnnotationAssertion>
     <AnnotationAssertion>
-        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/PR_000029067</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOWL#hasExactSynonym"/>
         <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
-        <Literal>http://purl.obolibrary.org/obo/PR_000029067</Literal>
+        <Literal>human protein</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOWL#hasExactSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>man</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>Home sapiens</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>Homo sampiens</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>Homo sapeins</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>Homo sapian</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>Homo sapians</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>Homo sapien</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>Homo sapience</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>Homo sapiense</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>Homo sapients</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>Homo sapines</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>Homo spaiens</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>Homo spiens</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>Humo sapiens</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>h</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <Annotation>
+            <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasDbXref"/>
+            <Literal>http://purl.obolibrary.org/obo/NCBITaxon_9606</Literal>
+        </Annotation>
+        <AnnotationProperty IRI="http://www.geneontology.org/formats/oboInOwl#hasSynonym"/>
+        <IRI>http://purl.obolibrary.org/obo/AGRO_00000238</IRI>
+        <Literal>human</Literal>
     </AnnotationAssertion>
     <AnnotationAssertion>
         <AnnotationProperty abbreviatedIRI="rdfs:label"/>

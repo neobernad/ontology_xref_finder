@@ -47,19 +47,17 @@ public class FindXrefTest extends TestCase {
 		// File outputOnt = File.createTempFile("output", "owl");
 		File outputOnt = new File("C:/Users/Neo/Desktop/output.owl");
 		// outputOnt.deleteOnExit();
-		AbstractXrefClient xrefClient = new OLSXrefClient(argParser.getOlsURL(), ddphenoOnt, 2);
+		AbstractXrefClient xrefClient = new OLSXrefClient(argParser.getOlsURL(), ddphenoOnt, 5);
 
 		xrefClient.getOntology().classesInSignature().forEach(owlClass -> {
 			List<IRI> xrefList = null;
 			try {
 				Stream<IRI> xrefStream = xrefClient.findXrefByLabel(owlClass);
 				xrefList = xrefStream.collect(Collectors.toList());
-				xrefClient.addXrefToClass(owlClass, xrefList);
+				// xrefClient.addXrefToClass(owlClass, xrefList);
 				for (IRI xrefIri : xrefList) {
 					List<OntologyTerm> ontologyTerms = xrefClient.getTerm(xrefIri);
-					for (OntologyTerm term : ontologyTerms) {
-						xrefClient.addSynonymsToClass(owlClass, term.getObo_synonym(), xrefIri);
-					}
+					xrefClient.addSynonymsToClass(owlClass, ontologyTerms, xrefIri);
 				}
 			} catch (SocketException e) {
 				e.printStackTrace();

@@ -67,11 +67,13 @@ public class OLSXrefClient extends AbstractXrefClient {
         	LOGGER.warning("Could not find XRefs for annotation '" + literalValue + "'");
         	return  new LinkedList<IRI>();
         } else {
-        	LOGGER.info("Found '" + items.size() + "' possible XRefs for '" + literalValue + "'");
+        	LOGGER.info("Found '" + items.size() + "' crossreference/s for '" + literalValue + "'");
         }
         List<IRI> result = new LinkedList<IRI>();
         for (OLSSearchItem olsSearchItem : items) {
-        	result.add(IRI.create(olsSearchItem.getIri()));
+        	if (olsSearchItem.isClass()) { // We could find properties, but those are not Xrefs
+        		result.add(IRI.create(olsSearchItem.getIri()));
+        	}
 		}
 		return result;
 	}
@@ -96,7 +98,14 @@ public class OLSXrefClient extends AbstractXrefClient {
 		return result;
 		
 	}
-
+	/**
+	 * Retrieves a term from the OLS API depending on the @param iri
+	 * 
+	 * @param iri IRI of the term to retrieve.
+	 * @return A list of terms with only 1 term. A list is returned
+	 * due to the API encapsulates the result in a JSON array, though only 
+	 * 1 item (term) is returned.
+	 */
 	@Override
 	public List<OntologyTerm> getTerm(IRI iri) throws SocketException {
 		WebTarget client = createClient(OLSEndpoint.getTerm(iri));
