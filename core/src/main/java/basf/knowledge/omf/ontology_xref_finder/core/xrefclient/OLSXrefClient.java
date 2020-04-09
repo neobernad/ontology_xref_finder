@@ -53,7 +53,7 @@ public class OLSXrefClient extends AbstractXrefClient {
 		OWLLiteral literal = annotation.getValue().asLiteral().get();
 		String literalValue = literal.getLiteral();
 		WebTarget client = createClient(OLSEndpoint.search(literalValue,
-				QUERY_FIELDS, this.max_xrefs, this.ontologiesFilter));
+				QUERY_FIELDS, this.max_xrefs, this.exactMatch, this.ontologiesFilter));
 		Response response = client.request(MediaType.APPLICATION_JSON).get();
         // System.out.println(response.readEntity(String.class));
         if (Status.OK.getStatusCode() != response.getStatus()) {

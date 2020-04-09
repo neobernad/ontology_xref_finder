@@ -44,6 +44,7 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	protected Integer max_xrefs; // Maximum number of xrefs to add per term
 	protected List<String> ontologiesFilter = null; // Ontologies considered in a search
 	protected Boolean noDbXref = false;
+	protected Boolean exactMatch = false;
 	protected final OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 	protected final OWLDataFactory factory = new OWLDataFactoryImpl();
 	protected final XrefProcessReporterLogger xrefProcessReporter = new XrefProcessReporterLogger();
@@ -107,6 +108,14 @@ public abstract class AbstractXrefClient implements IXrefClient {
 
 	public void setMax_xrefs(Integer max_xrefs) {
 		this.max_xrefs = max_xrefs;
+	}
+	
+	public Boolean getExactMatch() {
+		return exactMatch;
+	}
+
+	public void setExactMatch(Boolean exactMatch) {
+		this.exactMatch = exactMatch;
 	}
 
 	/**

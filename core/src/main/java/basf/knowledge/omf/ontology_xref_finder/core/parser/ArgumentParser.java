@@ -26,6 +26,8 @@ class ArgumentsKeys {
 	public static final String ONTOLOGIES_FILTER_L = "ontologies";
 	public static final String NO_DBXREF_S = null;
 	public static final String NO_DBXREF_L = "no_dbxref";
+	public static final String EXACT_SEARCH_S = null;
+	public static final String EXACT_SEARCH_L = "exact_search";
 }
 
 class ArgumentsDefaultValues {
@@ -33,6 +35,7 @@ class ArgumentsDefaultValues {
 	public static final String OLS_URL_DEFAULT = "https://www.ebi.ac.uk/ols/api";
 	public static final List<String> ONTOLOGIES_FILTER_DEFAULT = new LinkedList<String>();
 	public static final Boolean NO_DBXREF = false;
+	public static final Boolean EXACT_SEARCH = false;
 }
 
 public class ArgumentParser {
@@ -43,6 +46,7 @@ public class ArgumentParser {
 	private Integer maxXrefs = ArgumentsDefaultValues.MAX_XREFS_DEFAULT;
 	private List<String> ontologiesFilter = ArgumentsDefaultValues.ONTOLOGIES_FILTER_DEFAULT;
 	private Boolean noDbXref = ArgumentsDefaultValues.NO_DBXREF;
+	private Boolean exactSearch = ArgumentsDefaultValues.EXACT_SEARCH;
 	private Options options = new Options();
 
 	public ArgumentParser() {
@@ -86,7 +90,6 @@ public class ArgumentParser {
 		/*
 		 * Optional parameters
 		 */
-		this.maxXrefs = ArgumentsDefaultValues.MAX_XREFS_DEFAULT;
 		if (cmd.hasOption(ArgumentsKeys.MAX_XREFS_L)) {
 			this.maxXrefs = Integer.valueOf(cmd.getOptionValue(ArgumentsKeys.MAX_XREFS_L));
 			if (this.maxXrefs != null && this.maxXrefs <= 0) {
@@ -101,14 +104,16 @@ public class ArgumentParser {
 			this.ontologiesFilter = Arrays.asList(arrayOntologies);
 		}
 		
-		this.olsURL = ArgumentsDefaultValues.OLS_URL_DEFAULT;
 		if (cmd.hasOption(ArgumentsKeys.OLS_URL_L)) {
 			this.olsURL = cmd.getOptionValue(ArgumentsKeys.OLS_URL_L);
 		}
 		
-		this.noDbXref = ArgumentsDefaultValues.NO_DBXREF;
 		if (cmd.hasOption(ArgumentsKeys.NO_DBXREF_L)) {
 			this.noDbXref = true;
+		}
+		
+		if (cmd.hasOption(ArgumentsKeys.EXACT_SEARCH_L)) {
+			this.exactSearch = true;
 		}
 		
 		return true;
@@ -135,16 +140,20 @@ public class ArgumentParser {
 		ontologiesFilter.setRequired(false);
 		options.addOption(ontologiesFilter);
 		
+		Option olsURL = new Option(ArgumentsKeys.OLS_URL_S, ArgumentsKeys.OLS_URL_L, true,
+				"URL to the OWL API (e.g. https://www.ebi.ac.uk/ols/api)");
+		olsURL.setRequired(false);
+		options.addOption(olsURL);
+		
 		Option noDbxref = new Option(ArgumentsKeys.NO_DBXREF_S, ArgumentsKeys.NO_DBXREF_L, false,
 				"If specified, annotations are NOT annotated with the source cross-referenced class where the annotation comes from.");
 		noDbxref.setRequired(false);
 		options.addOption(noDbxref);
 		
-		
-		Option olsURL = new Option(ArgumentsKeys.OLS_URL_S, ArgumentsKeys.OLS_URL_L, true,
-				"URL to the OWL API (e.g. https://www.ebi.ac.uk/ols/api)");
-		olsURL.setRequired(false);
-		options.addOption(olsURL);
+		Option exactSearch = new Option(ArgumentsKeys.EXACT_SEARCH_S, ArgumentsKeys.EXACT_SEARCH_L, false,
+				"If specified, exact search is took into account (case insensitive search)");
+		exactSearch.setRequired(false);
+		options.addOption(exactSearch);
 		
 		Option help = new Option("h", "help");
 		options.addOption(help);
@@ -177,6 +186,10 @@ public class ArgumentParser {
 	
 	public String getOlsURL() {
 		return olsURL;
+	}
+	
+	public Boolean getExactSearch() {
+		return exactSearch;
 	}
 
 	@Override

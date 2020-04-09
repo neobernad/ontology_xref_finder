@@ -18,7 +18,8 @@ public class OLSEndpoint {
 	private static final String PARAM_QUERY_FIELDS = "queryFields";
 	private static final String PARAM_ROWS = "rows";
 	private static final String PARAM_ONTOLOGY = "ontology";
-	private static final String ENABLE_EXACT_MATCH = "exact=on";
+	private static final String PARAM_EXACT_MATCH = "exact";
+	private static final String VAL_EXACT_MATCH = "on";
 	
 	
 	public static APIQueryParams getTerm(IRI iri) {
@@ -55,8 +56,8 @@ public class OLSEndpoint {
 	 * @param rows Maximum number of results (e.g: 2)
 	 * @return An APIQueryParams wrapping the request parameters.
 	 */
-	public static APIQueryParams search(String query, String queryFields, Integer rows) {
-		return search(query, queryFields, rows, null);
+	public static APIQueryParams search(String query, String queryFields, Integer rows, Boolean exactSearch) {
+		return search(query, queryFields, rows, exactSearch, null);
 	}
 	
 	/**
@@ -68,7 +69,8 @@ public class OLSEndpoint {
 	 * @param ontologiesFilter List of ontologies to consider in the search (e.g: doid,clo)
 	 * @return An APIQueryParams wrapping the request parameters.
 	 */
-	public static APIQueryParams search(String query, String queryFields, Integer rows, List<String> ontologiesFilter) {
+	public static APIQueryParams search(String query, String queryFields, Integer rows, 
+			Boolean exactSearch, List<String> ontologiesFilter) {
 		APIQueryParams apiQueryparams = new APIQueryParams();
 		apiQueryparams.setContextPath(SEARCH_CTXT);
 		apiQueryparams.addQueryParam("q", query); // q=Destillation
@@ -78,11 +80,12 @@ public class OLSEndpoint {
 		if (rows != null && rows > 0) {
 			apiQueryparams.addQueryParam(PARAM_ROWS, rows); // rows=2
 		}
-		
+		if (exactSearch != null && exactSearch.booleanValue()) {
+			apiQueryparams.addQueryParam(PARAM_EXACT_MATCH, VAL_EXACT_MATCH); // exact=on
+		}
 		if (ontologiesFilter != null && !ontologiesFilter.isEmpty()) {
 			apiQueryparams.addQueryParam(PARAM_ONTOLOGY, String.join(",", ontologiesFilter)); // ontology=doid,clo
 		}
-
 		return apiQueryparams;
 	}
 }

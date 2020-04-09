@@ -37,8 +37,10 @@ public class App {
 			
 			xrefClient = new OLSXrefClient(argParser.getOlsURL(), argParser.getInputOntologyFilename(),
 					argParser.getMaxXrefs());
+			// TODO: Wrap search configuration inside an object, instead of handling sevaral setters
 			xrefClient.setOntologiesFilter(argParser.getOntologiesFilter());
 			xrefClient.setNoDbXref(argParser.getNoDbXref());
+			xrefClient.setExactMatch(argParser.getExactSearch());
 		} catch (OWLOntologyCreationException e) {
 			LOGGER.info(e.getMessage());
 			e.printStackTrace();
