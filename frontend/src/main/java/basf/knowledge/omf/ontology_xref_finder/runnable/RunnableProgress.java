@@ -11,6 +11,7 @@ import javax.swing.JProgressBar;
 import org.semanticweb.owlapi.model.IRI;
 
 import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTerm;
+import basf.knowledge.omf.ontology_xref_finder.core.model.XrefMatch;
 import basf.knowledge.omf.ontology_xref_finder.core.xrefclient.AbstractXrefClient;
 
 /**
@@ -43,13 +44,15 @@ public class RunnableProgress implements Runnable, RunnableProgressPerformer {
 	public void run() {
 		xrefClient.getOntology().classesInSignature().forEach(owlClass -> {
 			try {
-				Stream<IRI> xrefStream = xrefClient.findXrefByLabel(owlClass);
-				List<IRI> xrefList = xrefStream.collect(Collectors.toList());
+				Stream<XrefMatch> xrefStream = xrefClient.findXrefByLabel(owlClass);
+				List<XrefMatch> xrefList = xrefStream.collect(Collectors.toList());
 				progressBar.setValue(progressBar.getValue() + 1);
 				// xrefClient.addXrefToClass(owlClass, xrefList);
-				for (IRI xrefIri : xrefList) {
-					List<OntologyTerm> ontologyTerms = xrefClient.getTerm(xrefIri);
-					xrefClient.addSynonymsToClass(owlClass, ontologyTerms, xrefIri);
+				for (XrefMatch xrefMatch : xrefList) {
+					for (IRI xrefIri : xrefMatch.getMatchedIRIs()) {
+						List<OntologyTerm> ontologyTerms = xrefClient.getTerm(xrefIri);
+						xrefClient.addSynonymsToClass(owlClass, ontologyTerms, xrefIri);
+					}
 				}
 			} catch (SocketException e) {
 				progressError(e.getMessage());

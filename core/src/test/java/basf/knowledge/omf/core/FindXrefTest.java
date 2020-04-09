@@ -9,16 +9,15 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.formats.OWLXMLDocumentFormat;
 import org.semanticweb.owlapi.formats.RDFXMLDocumentFormat;
 import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLDocumentFormat;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLOntologyStorageException;
 
 import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTerm;
+import basf.knowledge.omf.ontology_xref_finder.core.model.XrefMatch;
 import basf.knowledge.omf.ontology_xref_finder.core.parser.ArgumentParser;
 import basf.knowledge.omf.ontology_xref_finder.core.xrefclient.AbstractXrefClient;
 import basf.knowledge.omf.ontology_xref_finder.core.xrefclient.OLSXrefClient;
@@ -50,14 +49,16 @@ public class FindXrefTest extends TestCase {
 		AbstractXrefClient xrefClient = new OLSXrefClient(argParser.getOlsURL(), ddphenoOnt, 3);
 
 		xrefClient.getOntology().classesInSignature().forEach(owlClass -> {
-			List<IRI> xrefList = null;
+			List<XrefMatch> xrefList = null;
 			try {
-				Stream<IRI> xrefStream = xrefClient.findXrefByLabel(owlClass);
+				Stream<XrefMatch> xrefStream = xrefClient.findXrefByLabel(owlClass);
 				xrefList = xrefStream.collect(Collectors.toList());
 				// xrefClient.addXrefToClass(owlClass, xrefList);
-				for (IRI xrefIri : xrefList) {
-					List<OntologyTerm> ontologyTerms = xrefClient.getTerm(xrefIri);
-					xrefClient.addSynonymsToClass(owlClass, ontologyTerms, xrefIri);
+				for (XrefMatch xrefMatch : xrefList) {
+					for (IRI xrefIri : xrefMatch.getMatchedIRIs()) {
+						List<OntologyTerm> ontologyTerms = xrefClient.getTerm(xrefIri);
+						xrefClient.addSynonymsToClass(owlClass, ontologyTerms, xrefIri);
+					}
 				}
 			} catch (SocketException e) {
 				e.printStackTrace();
