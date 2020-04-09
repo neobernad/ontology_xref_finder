@@ -66,15 +66,16 @@ public class OLSXrefClient extends AbstractXrefClient {
         if (items.isEmpty()) {
         	LOGGER.warning("Could not find XRefs for annotation '" + literalValue + "'");
         	return  new LinkedList<IRI>();
-        } else {
-        	LOGGER.info("Found '" + items.size() + "' crossreference/s for '" + literalValue + "'");
-        }
+        } 
         List<IRI> result = new LinkedList<IRI>();
         for (OLSSearchItem olsSearchItem : items) {
         	if (olsSearchItem.isClass()) { // We could find properties, but those are not Xrefs
         		result.add(IRI.create(olsSearchItem.getIri()));
         	}
 		}
+        if (!result.isEmpty()) {
+        	LOGGER.info("Found '" + result.size() + "' crossreference/s for '" + literalValue + "'");
+        }
 		return result;
 	}
 

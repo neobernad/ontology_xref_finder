@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import basf.knowledge.omf.ontology_xref_finder.core.model.ReportItem;
+import basf.knowledge.omf.ontology_xref_finder.core.model.ReportItemXrefMatch;
 
 
 public class XrefProcessCSVReporter extends XrefProcessAbstractReporter {
@@ -20,9 +21,9 @@ public class XrefProcessCSVReporter extends XrefProcessAbstractReporter {
 			sb.append(">>>>>> I could find cross-references to the following classes:\n");
 			sb.append("\n");
 			sb.append("label,uri,synonyms\n");
-			for (ReportItem reportItem : xrefFound) {
-				sb.append(reportItem.getLabel() + "," + reportItem.getIri() + ",");
-				String synonymListStr = reportItem.getSynonymLabels().stream().map(str -> str.toString()).collect(Collectors.joining(","));
+			for (ReportItemXrefMatch reportItem : xrefFound) {
+				sb.append(reportItem.getInputLabel() + "," + reportItem.getXrefIri() + ",");
+				String synonymListStr = reportItem.getxRefSynonymLabels().stream().map(str -> str.toString()).collect(Collectors.joining(","));
 				sb.append("\"" + synonymListStr + "\"\n");
 			}
 			sb.append("\n");

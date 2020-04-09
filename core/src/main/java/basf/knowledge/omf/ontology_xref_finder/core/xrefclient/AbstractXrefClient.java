@@ -175,13 +175,13 @@ public abstract class AbstractXrefClient implements IXrefClient {
 				List<XrefMatch> xrefList = xrefStream.collect(Collectors.toList());
 				// xrefClient.addXrefToClass(owlClass, xrefList);
 				for (XrefMatch xrefMatch : xrefList) {
-					String annotationLiteral = xrefMatch.getLiteral();
+					String classLiteral = xrefMatch.getLiteral();
 					for (IRI xrefIri : xrefMatch.getMatchedIRIs()) {
 						List<OntologyTerm> ontologyTerms = getTerm(xrefIri);
 						if (ontologyTerms.isEmpty()) {
 							xrefProcessReporter.addClassesWithoutXrefData(owlClass.getIRI(), xrefIri.getIRIString());
 						} else {
-							xrefProcessReporter.addXrefFound(xrefIri, ontologyTerms.get(0).getLabel(), ontologyTerms.get(0).getObo_synonym());
+							xrefProcessReporter.addXrefFound(classLiteral, xrefIri, ontologyTerms.get(0).getLabel(), ontologyTerms.get(0).getObo_synonym());
 						}
 						addSynonymsToClass(owlClass, ontologyTerms, xrefIri);
 					}
