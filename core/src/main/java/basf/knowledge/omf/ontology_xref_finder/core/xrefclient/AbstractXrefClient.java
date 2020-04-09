@@ -181,7 +181,7 @@ public abstract class AbstractXrefClient implements IXrefClient {
 						if (ontologyTerms.isEmpty()) {
 							xrefProcessReporter.addClassesWithoutXrefData(owlClass.getIRI(), xrefIri.getIRIString());
 						} else {
-							xrefProcessReporter.addXrefFound(xrefIri, annotationLiteral, ontologyTerms.get(0).getObo_synonym());
+							xrefProcessReporter.addXrefFound(xrefIri, ontologyTerms.get(0).getLabel(), ontologyTerms.get(0).getObo_synonym());
 						}
 						addSynonymsToClass(owlClass, ontologyTerms, xrefIri);
 					}
