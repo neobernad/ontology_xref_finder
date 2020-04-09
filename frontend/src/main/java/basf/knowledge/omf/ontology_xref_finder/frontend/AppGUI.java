@@ -3,7 +3,7 @@ import java.awt.EventQueue;
 import java.util.Locale;
 
 import com.formdev.flatlaf.FlatDarkLaf;
-
+import com.formdev.flatlaf.FlatLightLaf;
 
 public class AppGUI {
 
@@ -14,6 +14,7 @@ public class AppGUI {
 		Locale.setDefault(new Locale("en", "EN"));
 		
 		FlatDarkLaf.install();
+		
 		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

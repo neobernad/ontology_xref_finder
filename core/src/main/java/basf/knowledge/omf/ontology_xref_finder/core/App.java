@@ -1,5 +1,6 @@
 package basf.knowledge.omf.ontology_xref_finder.core;
 
+import java.util.Locale;
 import java.util.logging.Logger;
 
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -23,6 +24,7 @@ public class App {
 	private static final Logger LOGGER = Logger.getLogger(App.class.getName());
 
 	public static void main(String[] args) {
+		Locale.setDefault(new Locale("en", "EN"));
 		
 		IOntologySaver ontologySaver = new OntologySaver();
 		AbstractXrefClient xrefClient = null;

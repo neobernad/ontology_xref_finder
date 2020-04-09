@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>basf.knowledge.omf</groupId>
 		<artifactId>ontology_xref_finder</artifactId>
-		<version>1.0.0</version>
+		<version>${appVersion}</version>
 	</parent>
 	<groupId>basf.knowledge.omf.ontology_xref_finder</groupId>
 	<artifactId>core</artifactId>

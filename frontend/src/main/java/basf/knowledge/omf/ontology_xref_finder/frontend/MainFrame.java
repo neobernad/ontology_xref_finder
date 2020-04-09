@@ -12,11 +12,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.PrintStream;
-import java.util.logging.Logger;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -41,18 +41,9 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
-import com.formdev.flatlaf.icons.FlatAscendingSortIcon;
-import com.formdev.flatlaf.icons.FlatCheckBoxIcon;
-import com.formdev.flatlaf.icons.FlatFileChooserDetailsViewIcon;
-import com.formdev.flatlaf.icons.FlatFileChooserHomeFolderIcon;
-import com.formdev.flatlaf.icons.FlatFileChooserListViewIcon;
-import com.formdev.flatlaf.icons.FlatFileChooserNewFolderIcon;
-import com.formdev.flatlaf.icons.FlatFileChooserUpFolderIcon;
 import com.formdev.flatlaf.icons.FlatFileViewFileIcon;
 import com.formdev.flatlaf.icons.FlatFileViewFloppyDriveIcon;
 import com.formdev.flatlaf.icons.FlatFileViewHardDriveIcon;
-import com.formdev.flatlaf.icons.FlatHelpButtonIcon;
-import com.formdev.flatlaf.icons.FlatInternalFrameIconifyIcon;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.FormSpecs;
@@ -66,8 +57,6 @@ import basf.knowledge.omf.ontology_xref_finder.frontend.utils.HTMLUtils;
 import basf.knowledge.omf.ontology_xref_finder.output_stream.TextAreaOutputStream;
 import basf.knowledge.omf.ontology_xref_finder.runnable.RunnableProgress;
 import basf.knowledge.omf.ontology_xref_finder.runnable.RunnableProgressListener;
-
-import javax.swing.JCheckBox;
 
 public class MainFrame extends JFrame implements RunnableProgressListener {
 
