@@ -5,9 +5,11 @@ This tool reads an input ontology (`-i`) and loops through its classes. For each
 # Usage
 
 ```bash
-usage: ontology_xref_finder [-h] [-i <arg>] [-mx <arg>] [--no_dbxref] [-o
-       <arg>] [--ols_url <arg>] [--ontologies <arg>]
+usage: ontology_xref_finder [--exact_search] [-h] [-i <arg>] [-mx <arg>]
+       [--no_dbxref] [-o <arg>] [--ols_url <arg>] [--ontologies <arg>]
 ---
+    --exact_search       If specified, exact search is took into account
+                         (case insensitive search)
  -h                      help
  -i,--input <arg>        Input ontology file path
  -mx,--max_xrefs <arg>   Maximum number of Xrefs to add to a term
@@ -20,7 +22,6 @@ usage: ontology_xref_finder [-h] [-i <arg>] [-mx <arg>] [--no_dbxref] [-o
     --ontologies <arg>   Comma separeted list of ontology names (e.g:
                          doid,clo)
 ---
-
 ```
 
 For custom OLS deployments use `--ols_url` to specify the URL of the OLS API.
