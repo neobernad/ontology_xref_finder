@@ -1,5 +1,6 @@
 package basf.knowledge.omf.ontology_xref_finder.core.model;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.semanticweb.owlapi.model.IRI;
@@ -10,13 +11,20 @@ public class ReportItemXrefMatch {
 	private IRI xrefIri;
 	private String xrefLabel;
 	private List<String> xRefSynonymLabels;
+	private List<String> xRefDefinitions;
 	
-	public ReportItemXrefMatch(String inputLabel, String inputDef, IRI xrefIri, String xrefLabel, List<String> xRefSynonymLabels) {
+	public ReportItemXrefMatch(String inputLabel, String inputDef, IRI xrefIri, 
+			String xrefLabel, List<String> xRefSynonymLabels, List<String> xrefDefinitions) {
 		this.inputLabel = inputLabel;
 		this.inputDef = inputDef;
 		this.xrefIri = xrefIri;
 		this.xrefLabel = xrefLabel;
 		this.xRefSynonymLabels = xRefSynonymLabels;
+		if (xrefDefinitions == null) {
+			this.xRefDefinitions = new LinkedList<String>();
+		} else {
+			this.xRefDefinitions = xrefDefinitions;
+		}
 	}
 
 	public String getInputLabel() {
@@ -57,6 +65,14 @@ public class ReportItemXrefMatch {
 
 	public void setInputDef(String inputDef) {
 		this.inputDef = inputDef;
+	}
+	
+	public List<String> getxRefDefinitions() {
+		return xRefDefinitions;
+	}
+
+	public void setxRefDefinitions(List<String> xRefDefinitions) {
+		this.xRefDefinitions = xRefDefinitions;
 	}
 
 	@Override

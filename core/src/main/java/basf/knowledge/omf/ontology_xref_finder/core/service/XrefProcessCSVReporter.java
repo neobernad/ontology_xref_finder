@@ -22,8 +22,10 @@ public class XrefProcessCSVReporter extends XrefProcessAbstractReporter {
 			sb.append("\n");
 			sb.append("label,definition,\"xref uri\",\"xref synonyms\"\n");
 			for (ReportItemXrefMatch reportItem : xrefFound) {
-				sb.append(reportItem.getInputLabel() + ",\"" + reportItem.getInputDef() + "\","
+				sb.append("\"" + reportItem.getInputLabel() + "\",\"" + reportItem.getInputDef() + "\","
 						+ reportItem.getXrefIri() + ",");
+				String definitionsListStr = reportItem.getxRefDefinitions().stream().map(str -> str.toString()).collect(Collectors.joining(","));
+				sb.append("\"" + definitionsListStr + "\",\n");
 				String synonymListStr = reportItem.getxRefSynonymLabels().stream().map(str -> str.toString()).collect(Collectors.joining(","));
 				sb.append("\"" + synonymListStr + "\"\n");
 			}
@@ -34,7 +36,7 @@ public class XrefProcessCSVReporter extends XrefProcessAbstractReporter {
 			sb.append("\n");
 			sb.append("label\n");
 			for (ReportItem reportItem : noXrefFound) {
-				sb.append(reportItem.getLabel() + "\n");
+				sb.append("\"" +reportItem.getLabel() + "\"\n");
 			}
 			sb.append("\n");
 		}

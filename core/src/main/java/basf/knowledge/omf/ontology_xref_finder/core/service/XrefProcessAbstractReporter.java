@@ -32,7 +32,8 @@ public abstract class XrefProcessAbstractReporter implements IXrefProcessReporte
 		for (OntologySynonym ontologySynonym : xrefSynonyms) {
 			synonyms.add(ontologySynonym.getName());
 		}
-		xrefFound.add(new ReportItemXrefMatch(sourceLabel, sourceDef, xrefIri, xrefLabel, synonyms));
+		xrefFound.add(new ReportItemXrefMatch(sourceLabel, sourceDef, xrefIri, xrefLabel, 
+				synonyms, ontologyTerms.get(0).getDescription()));
 	}
 
 	public void addNoXrefFound(IRI iri, String label) {
