@@ -1,0 +1,222 @@
+format-version: 1.2
+data-version: releases/2019-11-19
+date: 18:11:2019 14:48
+saved-by: Petra
+auto-generated-by: OBO-Edit 2.2
+default-namespace: Dicty Phenotypes
+ontology: ddpheno
+
+[Term]
+id: DDPHENO:0000001
+name: aberrant spore color
+def: "Deviation from the normal, usual, or expected spore color." [DDB:pf]
+is_a: DDPHENO:0000513 ! aberrant sporulation
+created_by: pfey
+creation_date: 2013-08-14T16:28:20Z
+
+[Term]
+id: DDPHENO:0000002
+name: aberrant standing slug morphology
+def: "Deviation from the normal, usual, or expected morphology of the standing slug (finger)." [DDB:pf]
+synonym: "aberrant finger morphology" EXACT []
+is_a: DDPHENO:0001014 ! aberrant slug formation
+created_by: pfey
+creation_date: 2013-08-15T16:54:08Z
+
+[Term]
+id: DDPHENO:0000003
+name: increased slug length
+def: "Increase in length of the slug." [DDB:pf]
+synonym: "long slug" EXACT []
+is_a: DDPHENO:0000160 ! increased slug size
+created_by: pfey
+creation_date: 2013-08-16T15:21:25Z
+
+[Term]
+id: DDPHENO:0000004
+name: decreased slug size
+def: "Decrease in relative or proportionate dimensions of the slug." [DDB:pf]
+is_a: DDPHENO:0001014 ! aberrant slug formation
+created_by: pfey
+creation_date: 2013-08-27T16:36:33Z
+
+[Term]
+id: DDPHENO:0000005
+name: aberrant autophagy
+def: "Deviation from the normal, usual, or expected events during autophagy." [DDB:pf]
+is_a: DDPHENO:0001005 ! aberrant cellular metabolic process
+created_by: pfey
+creation_date: 2013-09-23T14:27:57Z
+
+[Term]
+id: DDPHENO:0000006
+name: increased autophagy
+def: "Increase in extent, amount, or degree of autophagy." [DDB:pf]
+is_a: DDPHENO:0000005 ! aberrant autophagy
+created_by: pfey
+creation_date: 2013-09-23T14:29:45Z
+
+[Term]
+id: DDPHENO:0000007
+name: decreased autophagy
+def: "Reduction in extent, amount, or degree of autophagy." [DDB:pf]
+is_a: DDPHENO:0000005 ! aberrant autophagy
+created_by: pfey
+creation_date: 2013-09-23T14:30:03Z
+
+[Term]
+id: DDPHENO:0000008
+name: aberrant post-transciptional gene silencing by RNA
+def: "Deviation from the normal, usual, or expected events during post-transciptional gene silencing by RNA." [DDB:pf]
+is_a: DDPHENO:0001005 ! aberrant cellular metabolic process
+created_by: pfey
+creation_date: 2013-10-28T15:52:58Z
+
+[Term]
+id: DDPHENO:0000009
+name: aberrant fruiting body morphology
+def: "Deviation from the normal, usual, or expected morphology of the fruiting body." [DDB:pg]
+synonym: "aberrant sorocarp morphology" EXACT []
+is_a: DDPHENO:0000154 ! aberrant development
+
+[Term]
+id: DDPHENO:0000010
+name: abolished post-transciptional gene silencing by RNA
+def: "Complete inability for post-transciptional gene silencing by RNA." [DDB:pf]
+is_a: DDPHENO:0000008 ! aberrant post-transciptional gene silencing by RNA
+created_by: pfey
+creation_date: 2013-10-28T15:57:20Z
+
+[Term]
+id: DDPHENO:0000011
+name: decreased post-transciptional gene silencing by RNA
+def: "Reduction in level of modification of post-transciptional gene silencing by RNA." [DDB:pf]
+is_a: DDPHENO:0000008 ! aberrant post-transciptional gene silencing by RNA
+created_by: pfey
+creation_date: 2013-10-28T15:59:10Z
+
+[Term]
+id: DDPHENO:0000012
+name: aberrant microRNA processing
+def: "Deviation from the normal, usual, or expected events during microRNA processing." [DDB:pf]
+synonym: "aberrant miRNA processing" EXACT []
+is_a: DDPHENO:0001005 ! aberrant cellular metabolic process
+created_by: pfey
+creation_date: 2013-10-28T18:00:23Z
+
+[Term]
+id: DDPHENO:0000014
+name: abolished microRNA processing
+def: "Complete inability for microRNA processing." [DDB:pf]
+synonym: "abolished miRNA processing" EXACT []
+is_a: DDPHENO:0000012 ! aberrant microRNA processing
+created_by: pfey
+creation_date: 2013-10-28T18:01:47Z
+
+[Term]
+id: DDPHENO:0000015
+name: increased microRNA processing
+def: "Increase in level of microRNA processing." [DDB:pf]
+synonym: "increased miRNA processing" EXACT []
+is_a: DDPHENO:0000012 ! aberrant microRNA processing
+created_by: pfey
+creation_date: 2013-10-28T18:03:08Z
+
+[Term]
+id: DDPHENO:0000016
+name: decreased microRNA processing
+def: "Reduction in level of microRNA processing." [DDB:pf]
+synonym: "decreased miRNA processing" EXACT []
+is_a: DDPHENO:0000012 ! aberrant microRNA processing
+created_by: pfey
+creation_date: 2013-10-28T18:03:53Z
+
+[Term]
+id: DDPHENO:0000017
+name: aberrant transitive RNA interference
+def: "Deviation from the normal, usual, or expected events during transitive RNA interference." [DDB:pf]
+synonym: "aberrant transitive RNAi" EXACT []
+is_a: DDPHENO:0000020 ! aberrant RNA interference
+created_by: pfey
+creation_date: 2013-11-06T10:25:06Z
+
+[Term]
+id: DDPHENO:0000018
+name: abolished transitive RNA interference
+def: "Complete inability for transitive RNA interference." [DDB:pf]
+synonym: "abolished transitive RNAi" EXACT []
+is_a: DDPHENO:0000017 ! aberrant transitive RNA interference
+created_by: pfey
+creation_date: 2013-11-06T10:26:55Z
+
+[Term]
+id: DDPHENO:0000019
+name: abolished culmination
+def: "Complete inability for culmination." [DDB:pg]
+synonym: "culmination defective" RELATED []
+is_a: DDPHENO:0001015 ! aberrant culmination
+
+[Term]
+id: DDPHENO:0000020
+name: aberrant RNA interference
+def: "Deviation from the normal, usual, or expected events during RNA interference." [DDB:pf]
+synonym: "aberrant RNAi" RELATED []
+is_a: DDPHENO:0000008 ! aberrant post-transciptional gene silencing by RNA
+created_by: pfey
+creation_date: 2013-11-06T10:35:04Z
+
+[Term]
+id: DDPHENO:0000021
+name: abolished RNA interference
+synonym: "abolished RNAi" RELATED []
+is_a: DDPHENO:0000020 ! aberrant RNA interference
+created_by: pfey
+creation_date: 2013-11-06T10:38:10Z
+
+[Term]
+id: DDPHENO:0000022
+name: aberrant production of siRNA involved in RNA interference
+def: "Deviation from the normal, usual, or expected events during production of siRNA involved in RNA interference." [DDB:pf]
+synonym: "aberrant production of siRNA involved in RNAi" RELATED []
+is_a: DDPHENO:0000020 ! aberrant RNA interference
+created_by: pfey
+creation_date: 2013-11-06T11:17:36Z
+
+[Term]
+id: DDPHENO:0000024
+name: abolished production of siRNA involved in RNA interference
+def: "Complete inability for production of siRNA involved in RNA interference." [DDB:pf]
+synonym: "abolished production of siRNA involved in RNAi" RELATED []
+is_a: DDPHENO:0000022 ! aberrant production of siRNA involved in RNA interference
+created_by: pfey
+creation_date: 2013-11-06T11:20:17Z
+
+[Term]
+id: DDPHENO:0000025
+name: abolished exocytosis
+def: "Complete inability for exocytosis." [DDB:pf]
+is_a: DDPHENO:0001110 ! aberrant exocytosis
+created_by: pfey
+creation_date: 2013-12-02T17:36:22Z
+
+[Term]
+id: DDPHENO:0000026
+name: development arrests at mound stage
+def: "Development cannot progress past the mound stage." [DDB:pf]
+synonym: "development arrests at aggregate stage" EXACT []
+is_a: DDPHENO:0000154 ! aberrant development
+
+[Term]
+id: DDPHENO:0000027
+name: abolished phagosome re-neutralization
+def: "Complete inability for phagosome re-neutralization." [DDB:pf]
+is_a: DDPHENO:0001488 ! aberrant phagosome maturation
+created_by: pfey
+creation_date: 2013-12-02T17:39:10Z
+
+[Term]
+id: DDPHENO:0000028
+name: abolished stalk formation
+def: "Complete inability for formation of the stalk." [DDB:pg]
+is_a: DDPHENO:0001012 ! aberrant stalk formation
+

@@ -8,6 +8,7 @@ import org.semanticweb.owlapi.model.IRI;
 
 import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IXrefProcessReporter;
 import basf.knowledge.omf.ontology_xref_finder.core.model.OntologySynonym;
+import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTerm;
 import basf.knowledge.omf.ontology_xref_finder.core.model.ReportItem;
 import basf.knowledge.omf.ontology_xref_finder.core.model.ReportItemXrefMatch;
 
@@ -23,13 +24,15 @@ public abstract class XrefProcessAbstractReporter implements IXrefProcessReporte
 
 	}
 	
-	public void addXrefFound(String sourceLabel, IRI xrefIri, String xrefLabel, List<OntologySynonym> xrefSynonyms) {
+	public void addXrefFound(String sourceLabel, String sourceDef, IRI xrefIri, List<OntologyTerm> ontologyTerms) {
 		List<String> synonyms = new LinkedList<String>();
+		String xrefLabel = ontologyTerms.get(0).getLabel();
+		List<OntologySynonym> xrefSynonyms = ontologyTerms.get(0).getObo_synonym();
 		synonyms.add(xrefLabel); // Use owl class Label as synonym
 		for (OntologySynonym ontologySynonym : xrefSynonyms) {
 			synonyms.add(ontologySynonym.getName());
 		}
-		xrefFound.add(new ReportItemXrefMatch(sourceLabel, xrefIri, xrefLabel, synonyms));
+		xrefFound.add(new ReportItemXrefMatch(sourceLabel, sourceDef, xrefIri, xrefLabel, synonyms));
 	}
 
 	public void addNoXrefFound(IRI iri, String label) {

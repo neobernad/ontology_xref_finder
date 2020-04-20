@@ -6,12 +6,14 @@ import org.semanticweb.owlapi.model.IRI;
 
 public class ReportItemXrefMatch {
 	private String inputLabel;
+	private String inputDef;
 	private IRI xrefIri;
 	private String xrefLabel;
 	private List<String> xRefSynonymLabels;
-
-	public ReportItemXrefMatch(String inputLabel, IRI xrefIri, String xrefLabel, List<String> xRefSynonymLabels) {
+	
+	public ReportItemXrefMatch(String inputLabel, String inputDef, IRI xrefIri, String xrefLabel, List<String> xRefSynonymLabels) {
 		this.inputLabel = inputLabel;
+		this.inputDef = inputDef;
 		this.xrefIri = xrefIri;
 		this.xrefLabel = xrefLabel;
 		this.xRefSynonymLabels = xRefSynonymLabels;
@@ -47,6 +49,14 @@ public class ReportItemXrefMatch {
 
 	public void setxRefSynonymLabels(List<String> xRefSynonymLabels) {
 		this.xRefSynonymLabels = xRefSynonymLabels;
+	}
+	
+	public String getInputDef() {
+		return inputDef;
+	}
+
+	public void setInputDef(String inputDef) {
+		this.inputDef = inputDef;
 	}
 
 	@Override

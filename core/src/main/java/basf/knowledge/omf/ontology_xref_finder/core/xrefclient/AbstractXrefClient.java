@@ -14,6 +14,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
+import org.glassfish.hk2.utilities.ClasspathDescriptorFileFinder;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
@@ -33,7 +34,6 @@ import basf.knowledge.omf.ontology_xref_finder.core.model.OntologySynonym;
 import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTerm;
 import basf.knowledge.omf.ontology_xref_finder.core.model.XrefMatch;
 import basf.knowledge.omf.ontology_xref_finder.core.service.XrefProcessCSVReporter;
-import basf.knowledge.omf.ontology_xref_finder.core.service.XrefProcessPlainReporter;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.APIQueryParams;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.Constants;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.QueryParam;
@@ -41,6 +41,9 @@ import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 
 public abstract class AbstractXrefClient implements IXrefClient {
 	private static Logger LOGGER = Logger.getLogger(AbstractXrefClient.class.getName());
+	protected final OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+	protected final OWLDataFactory factory = new OWLDataFactoryImpl();
+	protected final IXrefProcessReporter xrefProcessReporter = new XrefProcessCSVReporter();
 	public static final Integer INFINITE_XREFS = -1; // Search all the Xrefs available in the API
 	protected String url;
 	protected OWLOntology ontology;
@@ -48,9 +51,7 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	protected List<String> ontologiesFilter = null; // Ontologies considered in a search
 	protected Boolean noDbXref = false;
 	protected Boolean exactMatch = false;
-	protected final OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-	protected final OWLDataFactory factory = new OWLDataFactoryImpl();
-	protected final IXrefProcessReporter xrefProcessReporter = new XrefProcessCSVReporter();
+
 
 	public AbstractXrefClient(String url, File ontologyFile, Integer max_xrefs) throws OWLOntologyCreationException {
 		this.url = url;
@@ -126,40 +127,59 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	 * (if present).
 	 */
 	public Stream<XrefMatch> findXrefByLabel(OWLClass owlClass) throws SocketException {
-		return findXrefByIRI(owlClass, Constants.RDF_LABEL);
+		return findXrefByIRI(owlClass, Constants.RDFS_LABEL);
 	}
 
-	public Stream<XrefMatch> findXrefByIRI(OWLClass owlClass, IRI wantedIRI) throws SocketException {
+	public Stream<XrefMatch> findXrefByIRI(OWLClass owlClass, IRI annotationIRI) throws SocketException {
 		List<XrefMatch> matchedXrefs = new LinkedList<XrefMatch>();
-
-		EntitySearcher.getAnnotations(owlClass, ontology).forEach(annotation -> {
-			if (annotation.getProperty().getIRI().equals(wantedIRI)) {
-				try {
-					List<IRI> retrievedIRIs = searchXref(annotation);
-					String annotationLiteral = annotation.literalValue().get().getLiteral();
-					if (retrievedIRIs.isEmpty()) {
-						xrefProcessReporter.addNoXrefFound(owlClass.getIRI(), annotationLiteral);
-					}
-					matchedXrefs.add(new XrefMatch(annotationLiteral, retrievedIRIs));
-				} catch (SocketException e) {
-					throw new RuntimeException(e.getMessage());
+		
+		OWLAnnotation owlAnnotation = EntitySearcher.getAnnotations(owlClass, ontology)
+				.filter(annotation -> annotation.getProperty().getIRI().equals(annotationIRI))
+				.findFirst().orElse(null);
+		
+		if (owlAnnotation != null) {
+			try {
+				List<IRI> retrievedIRIs = searchXref(owlAnnotation);
+				String annotationLiteral = owlAnnotation.literalValue().get().getLiteral();
+				if (retrievedIRIs.isEmpty()) {
+					xrefProcessReporter.addNoXrefFound(owlClass.getIRI(), annotationLiteral);
 				}
-
+				matchedXrefs.add(new XrefMatch(annotationLiteral, retrievedIRIs));
+			} catch (SocketException e) {
+				throw new RuntimeException(e.getMessage());
 			}
-		});
 
-		// Delete IRI if the xref is the own IRI of of owlClass.
-		matchedXrefs.removeIf(iri -> {
-			if (iri.equals(owlClass.getIRI())) {
-				return true;
-			}
-			return false;
-		});
+			// Delete IRI if the xref is the own IRI of of owlClass.
+			matchedXrefs.removeIf(iri -> {
+				if (iri.equals(owlClass.getIRI())) {
+					return true;
+				}
+				return false;
+			});
+		}
+		
+		
 		return matchedXrefs.stream();
 	}
 
 	public long getNumberOfClasses() {
 		return this.ontology.classesInSignature().count();
+	}
+	
+	private String getOWLClassDefinition(OWLClass owlClass) {
+		OWLAnnotation classDefinition = EntitySearcher.getAnnotations(owlClass, ontology)
+				.filter(annotation -> annotation.getProperty().getIRI().equals(Constants.OBO_DEF))
+				.findFirst().orElse(null);
+		if (classDefinition == null) {
+			classDefinition = EntitySearcher.getAnnotations(owlClass, ontology)
+					.filter(annotation -> annotation.getProperty().getIRI().equals(Constants.RDFS_COMMENT))
+					.findFirst().orElse(null);
+		}
+		
+		if (classDefinition == null) {
+			return "";
+		}
+		return classDefinition.literalValue().get().getLiteral();
 	}
 
 	/**
@@ -173,6 +193,7 @@ public abstract class AbstractXrefClient implements IXrefClient {
 			try {
 				Stream<XrefMatch> xrefStream = findXrefByLabel(owlClass);
 				List<XrefMatch> xrefList = xrefStream.collect(Collectors.toList());
+				String owlClassDefinition = getOWLClassDefinition(owlClass);
 				// xrefClient.addXrefToClass(owlClass, xrefList);
 				for (XrefMatch xrefMatch : xrefList) {
 					String classLiteral = xrefMatch.getLiteral();
@@ -181,7 +202,7 @@ public abstract class AbstractXrefClient implements IXrefClient {
 						if (ontologyTerms.isEmpty()) {
 							xrefProcessReporter.addClassesWithoutXrefData(owlClass.getIRI(), xrefIri.getIRIString());
 						} else {
-							xrefProcessReporter.addXrefFound(classLiteral, xrefIri, ontologyTerms.get(0).getLabel(), ontologyTerms.get(0).getObo_synonym());
+							xrefProcessReporter.addXrefFound(classLiteral, owlClassDefinition, xrefIri, ontologyTerms);
 						}
 						addSynonymsToClass(owlClass, ontologyTerms, xrefIri);
 					}

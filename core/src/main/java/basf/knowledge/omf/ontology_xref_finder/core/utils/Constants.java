@@ -5,7 +5,9 @@ import org.semanticweb.owlapi.model.IRI;
 public enum Constants {
 	INSTANCE;
 
-	public static IRI RDF_LABEL = IRI.create("http://www.w3.org/2000/01/rdf-schema#label");
+	public static IRI RDFS_LABEL = IRI.create("http://www.w3.org/2000/01/rdf-schema#label");
+	public static IRI RDFS_COMMENT = IRI.create("http://www.w3.org/2000/01/rdf-schema#comment");
+	public static IRI OBO_DEF = IRI.create("http://purl.obolibrary.org/obo/IAO_0000115");
 	public static IRI GO_HAS_DB_XREF = IRI.create("http://www.geneontology.org/formats/oboInOwl#hasDbXref");
 	public static IRI GO_HAS_EXACT_SYN = IRI.create("http://www.geneontology.org/formats/oboInOWL#hasExactSynonym");
 	public static IRI GO_HAS_NARROW_SYN = IRI.create("http://www.geneontology.org/formats/oboInOWL#hasNarrowSynonym");

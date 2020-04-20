@@ -20,15 +20,16 @@ public class XrefProcessCSVReporter extends XrefProcessAbstractReporter {
 		if (!xrefFound.isEmpty()) {
 			sb.append(">>>>>> I could find cross-references to the following classes:\n");
 			sb.append("\n");
-			sb.append("label,uri,synonyms\n");
+			sb.append("label,definition,\"xref uri\",\"xref synonyms\"\n");
 			for (ReportItemXrefMatch reportItem : xrefFound) {
-				sb.append(reportItem.getInputLabel() + "," + reportItem.getXrefIri() + ",");
+				sb.append(reportItem.getInputLabel() + ",\"" + reportItem.getInputDef() + "\","
+						+ reportItem.getXrefIri() + ",");
 				String synonymListStr = reportItem.getxRefSynonymLabels().stream().map(str -> str.toString()).collect(Collectors.joining(","));
 				sb.append("\"" + synonymListStr + "\"\n");
 			}
 			sb.append("\n");
 		}
-		if (noXrefFound.isEmpty()) {
+		if (!noXrefFound.isEmpty()) {
 			sb.append(">>>>>> I could NOT find cross-references to the following classes:\n");
 			sb.append("\n");
 			sb.append("label\n");
