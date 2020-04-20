@@ -25,7 +25,7 @@ public class XrefProcessCSVReporter extends XrefProcessAbstractReporter {
 				sb.append("\"" + reportItem.getInputLabel() + "\",\"" + reportItem.getInputDef() + "\","
 						+ reportItem.getXrefIri() + ",");
 				String definitionsListStr = reportItem.getxRefDefinitions().stream().map(str -> str.toString()).collect(Collectors.joining(","));
-				sb.append("\"" + definitionsListStr + "\",\n");
+				sb.append("\"" + definitionsListStr + "\",");
 				String synonymListStr = reportItem.getxRefSynonymLabels().stream().map(str -> str.toString()).collect(Collectors.joining(","));
 				sb.append("\"" + synonymListStr + "\"\n");
 			}
