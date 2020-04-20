@@ -18,5 +18,5 @@ public enum Constants {
 	public static String HAS_NARROW_SYN = "hasNarrowSynonym";
 	public static String HAS_RELATED_SYN = "hasRelatedSynonym";
 	public static final boolean DEV_MODE = true;
-	public static final boolean DEBUG_MODE = true;
+	public static final boolean DEBUG_MODE = false;
 }
