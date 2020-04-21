@@ -14,7 +14,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
-import org.glassfish.hk2.utilities.ClasspathDescriptorFileFinder;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
@@ -33,7 +32,7 @@ import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IXrefProcessRepor
 import basf.knowledge.omf.ontology_xref_finder.core.model.OntologySynonym;
 import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTerm;
 import basf.knowledge.omf.ontology_xref_finder.core.model.XrefMatch;
-import basf.knowledge.omf.ontology_xref_finder.core.service.XrefProcessCSVReporter;
+import basf.knowledge.omf.ontology_xref_finder.core.service.XrefProcessXLSXReporter;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.APIQueryParams;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.Constants;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.QueryParam;
@@ -43,9 +42,10 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	private static Logger LOGGER = Logger.getLogger(AbstractXrefClient.class.getName());
 	protected final OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 	protected final OWLDataFactory factory = new OWLDataFactoryImpl();
-	protected final IXrefProcessReporter xrefProcessReporter = new XrefProcessCSVReporter();
 	public static final Integer INFINITE_XREFS = -1; // Search all the Xrefs available in the API
+	protected IXrefProcessReporter xrefProcessReporter = null;
 	protected String url;
+	protected File ontologyFile;
 	protected OWLOntology ontology;
 	protected Integer max_xrefs; // Maximum number of xrefs to add per term
 	protected List<String> ontologiesFilter = null; // Ontologies considered in a search
@@ -55,8 +55,10 @@ public abstract class AbstractXrefClient implements IXrefClient {
 
 	public AbstractXrefClient(String url, File ontologyFile, Integer max_xrefs) throws OWLOntologyCreationException {
 		this.url = url;
+		this.ontologyFile = ontologyFile;
 		this.ontology = manager.loadOntologyFromOntologyDocument(ontologyFile);
 		this.max_xrefs = max_xrefs;
+		this.xrefProcessReporter = new XrefProcessXLSXReporter(this.ontologyFile.getParent());
 	}
 
 	public AbstractXrefClient(String url, String ontologyFilePath, Integer max_xrefs)

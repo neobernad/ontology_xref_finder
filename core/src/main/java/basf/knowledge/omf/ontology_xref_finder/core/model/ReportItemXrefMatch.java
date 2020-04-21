@@ -1,5 +1,6 @@
 package basf.knowledge.omf.ontology_xref_finder.core.model;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 

@@ -1,5 +1,9 @@
 package basf.knowledge.omf.ontology_xref_finder.core.service;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -10,17 +14,14 @@ import basf.knowledge.omf.ontology_xref_finder.core.model.ReportItemXrefMatch;
 public class XrefProcessCSVReporter extends XrefProcessAbstractReporter {
 	private static final Logger LOGGER = Logger.getLogger(XrefProcessCSVReporter.class.getName());
 
-	public XrefProcessCSVReporter() {
-
+	public XrefProcessCSVReporter(String outputDirectory) {
+		super(outputDirectory);
 	}
 
-	public String getReport() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("\n>>> Report\n");
+	public void getReport() throws IOException {
 		if (!xrefFound.isEmpty()) {
-			sb.append(">>>>>> I could find cross-references to the following classes:\n");
-			sb.append("\n");
-			sb.append("label,definition,\"xref uri\",\"xref synonyms\"\n");
+			StringBuffer sb = new StringBuffer();
+			sb.append("label,definition,\"xref uri\",\"xref definition\",\"xref synonyms\"\n");
 			for (ReportItemXrefMatch reportItem : xrefFound) {
 				sb.append("\"" + reportItem.getInputLabel() + "\",\"" + reportItem.getInputDef() + "\","
 						+ reportItem.getXrefIri() + ",");
@@ -29,33 +30,33 @@ public class XrefProcessCSVReporter extends XrefProcessAbstractReporter {
 				String synonymListStr = reportItem.getxRefSynonymLabels().stream().map(str -> str.toString()).collect(Collectors.joining(","));
 				sb.append("\"" + synonymListStr + "\"\n");
 			}
-			sb.append("\n");
+			String mappedTermsCSVPath = Paths.get(outputDirectory, mappedTermsFilename + ".csv").toString();
+			File mappedTermsCSV = new File(mappedTermsCSVPath);
+			mappedTermsCSV.createNewFile();
+			FileWriter fw = new FileWriter(mappedTermsCSV.getAbsolutePath(), false);
+			String mappedTerms = sb.toString();
+			LOGGER.info("Mapped terms:\n" + mappedTerms);
+			LOGGER.info("Mapped terms CSV file saved in '" + mappedTermsCSVPath + "'");
+			fw.write(mappedTerms);
+			fw.close();
 		}
 		if (!noXrefFound.isEmpty()) {
-			sb.append(">>>>>> I could NOT find cross-references to the following classes:\n");
-			sb.append("\n");
+			StringBuffer sb = new StringBuffer();
 			sb.append("label\n");
 			for (ReportItem reportItem : noXrefFound) {
 				sb.append("\"" +reportItem.getLabel() + "\"\n");
 			}
-			sb.append("\n");
+			String unmappedTermsCSVPath = Paths.get(outputDirectory, unmappedTermsFilename + ".csv").toString();
+			File unmappedTermsCSV = new File(unmappedTermsCSVPath);
+			unmappedTermsCSV.createNewFile();
+			FileWriter fw = new FileWriter(unmappedTermsCSV.getAbsolutePath(), false);
+			String unmappedTerms = sb.toString();
+			LOGGER.info("Unmapped terms:\n" + unmappedTerms);
+			LOGGER.info("Mapped terms CSV file saved in '" + unmappedTermsCSVPath + "'");
+			fw.write(unmappedTerms);
+			fw.close();
 		}
-//		if (classesWithoutXrefData.isEmpty()) {
-//			sb.append(">>>>>> I could find ontology terms for all the classes");
-//		} else {
-//			sb.append(">>>>>> I could not find ontology terms for the following classes:\n");
-//			sb.append(classesWithoutXrefData.toString());
-//		}
-//		sb.append("\n");
-//		if (classesWithoutXrefSynonyms.isEmpty()) {
-//			sb.append(">>>>>> I could find synonyms to all the classes");
-//		} else {
-//			sb.append(">>>>>> I could not find synonyms to the following classes:\n");
-//			sb.append(classesWithoutXrefSynonyms.toString());
-//		}
-		String report = sb.toString();
-		LOGGER.info(report);
-		return report;
+			
 	}
 
 }

@@ -1,5 +1,6 @@
 package basf.knowledge.omf.ontology_xref_finder.core;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Logger;
 
@@ -9,7 +10,6 @@ import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IOntologySaver;
 import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IXrefProcessReporter;
 import basf.knowledge.omf.ontology_xref_finder.core.parser.ArgumentParser;
 import basf.knowledge.omf.ontology_xref_finder.core.service.OntologySaver;
-import basf.knowledge.omf.ontology_xref_finder.core.service.XrefProcessPlainReporter;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.OWLFormat;
 import basf.knowledge.omf.ontology_xref_finder.core.xrefclient.AbstractXrefClient;
 import basf.knowledge.omf.ontology_xref_finder.core.xrefclient.OLSXrefClient;
@@ -43,7 +43,7 @@ public class App {
 			xrefClient.setNoDbXref(argParser.getNoDbXref());
 			xrefClient.setExactMatch(argParser.getExactSearch());
 		} catch (OWLOntologyCreationException e) {
-			LOGGER.info(e.getMessage());
+			LOGGER.info("Could not load ontology: " + e.getMessage());
 			e.printStackTrace();
 			return;
 		}
@@ -53,7 +53,13 @@ public class App {
 		 */
 		xrefClient.processOntologyXrefs();
 		IXrefProcessReporter report = xrefClient.getXrefProcessReporter();
-		report.getReport();
+		try {
+			report.getReport();
+		} catch (IOException e) {
+			LOGGER.info("Could not generate report: " + e.getMessage());
+			e.printStackTrace();
+			return;
+		}
 		ontologySaver.saveOntology(xrefClient.getOntology(), argParser.getOutputOntologyFilename(), OWLFormat.OWL);
 
 	}
