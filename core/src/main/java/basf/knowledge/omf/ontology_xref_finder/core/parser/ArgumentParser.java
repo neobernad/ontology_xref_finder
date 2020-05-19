@@ -1,7 +1,6 @@
 package basf.knowledge.omf.ontology_xref_finder.core.parser;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -12,6 +11,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+
+import basf.knowledge.omf.ontology_xref_finder.core.utils.ArgumentsDefaultValues;
 
 class ArgumentsKeys {
 	public static final String INPUT_ONT_S = "i";
@@ -28,14 +29,6 @@ class ArgumentsKeys {
 	public static final String NO_DBXREF_L = "no_dbxref";
 	public static final String EXACT_SEARCH_S = null;
 	public static final String EXACT_SEARCH_L = "exact_search";
-}
-
-class ArgumentsDefaultValues {
-	public static final Integer MAX_XREFS_DEFAULT = 1;
-	public static final String OLS_URL_DEFAULT = "https://www.ebi.ac.uk/ols/api";
-	public static final List<String> ONTOLOGIES_FILTER_DEFAULT = new LinkedList<String>();
-	public static final Boolean NO_DBXREF = false;
-	public static final Boolean EXACT_SEARCH = false;
 }
 
 public class ArgumentParser {

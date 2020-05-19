@@ -54,6 +54,7 @@ import basf.knowledge.omf.ontology_xref_finder.core.xrefclient.AbstractXrefClien
 import basf.knowledge.omf.ontology_xref_finder.core.xrefclient.OLSXrefClient;
 import basf.knowledge.omf.ontology_xref_finder.frontend.utils.CursorController;
 import basf.knowledge.omf.ontology_xref_finder.frontend.utils.HTMLUtils;
+import basf.knowledge.omf.ontology_xref_finder.frontend.utils.LabelUtils;
 import basf.knowledge.omf.ontology_xref_finder.output_stream.TextAreaOutputStream;
 import basf.knowledge.omf.ontology_xref_finder.runnable.RunnableProgress;
 import basf.knowledge.omf.ontology_xref_finder.runnable.RunnableProgressListener;
@@ -77,7 +78,7 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 	private JMenuItem menuFileSave = new JMenuItem();
 	private JButton btnLoadOntology = new JButton();
 	private JButton btnSaveOntology = new JButton();
-	private JButton btnDevMode = new JButton();
+//	private JButton btnDevMode = new JButton();
 	private JButton btnProcess = new JButton();
 	private JTextArea txtLogArea = new JTextArea();
 	private JProgressBar progressBar = new JProgressBar();
@@ -87,11 +88,12 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 
 	public MainFrame() {
 		initialize();
+		settingsActionPerformed();
 	}
 
 	private void initialize() {
 		setTitle(APP_NAME);
-		setBounds(100, 100, APP_DEFAULT_DIMENSION.width, APP_DEFAULT_DIMENSION.height);
+//		setBounds(100, 100, APP_DEFAULT_DIMENSION.width, APP_DEFAULT_DIMENSION.height);
 		setMinimumSize(APP_DEFAULT_DIMENSION);
 		setMaximumSize(APP_DEFAULT_DIMENSION);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -183,6 +185,14 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 		{
 			JMenu menuHelp = new JMenu("Help");
 			menuBar.add(menuHelp);
+			
+			// menuHelp items
+			{
+				JMenuItem menuSettings = new JMenuItem();
+				menuSettings.setText("Settings");
+				menuSettings.addActionListener(e -> settingsActionPerformed());
+				menuHelp.add(menuSettings);
+			}
 
 			// menuHelp items
 			{
@@ -192,8 +202,9 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 				menuHelpAbout.addActionListener(e -> aboutActionPerformed());
 				menuHelp.add(menuHelpAbout);
 			}
+			
 		}
-
+		
 		btnLoadOntology.setToolTipText("Load ontology");
 		btnLoadOntology.setIcon(new FlatFileViewFileIcon());
 		btnLoadOntology.addActionListener(e -> openOntologyActionPerformed(e));
@@ -202,13 +213,13 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 		btnSaveOntology.setIcon(new FlatFileViewFloppyDriveIcon());
 		btnSaveOntology.setEnabled(false);
 		
-		btnDevMode.setToolTipText("Enable or disable developer mode");
-		btnDevMode.setIcon(new FlatFileViewHardDriveIcon());
-		btnDevMode.addActionListener(e -> enableDisableDevModeActionPerformed(e));
+//		btnDevMode.setToolTipText("Enable or disable developer mode");
+//		btnDevMode.setIcon(new FlatFileViewHardDriveIcon());
+//		btnDevMode.addActionListener(e -> enableDisableDevModeActionPerformed(e));
 		
 		toolBarShortcuts.add(btnLoadOntology);
 		toolBarShortcuts.add(btnSaveOntology);
-		toolBarShortcuts.add(btnDevMode);
+//		toolBarShortcuts.add(btnDevMode);
 
 		// Tabbed pane
 
@@ -218,7 +229,7 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 		// Parameters panel
 		{
 			JPanel tabParameters = new JPanel();
-			tabbedPane.addTab("Parameters", null, tabParameters, "Execution parameters");
+			tabbedPane.addTab(LabelUtils.TAB_PARAM_TITLE, null, tabParameters, LabelUtils.TAB_PARAM_HOVER);
 			tabParameters.setLayout(new BorderLayout(0, 0));
 
 			JPanel paramPanel = new JPanel();
@@ -261,7 +272,7 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 		// Log panel
 		{
 			JPanel tabLog = new JPanel();
-			tabbedPane.addTab("Log", null, tabLog, "Show application logs");
+			tabbedPane.addTab(LabelUtils.TAB_LOG_TITLE, null, tabLog, LabelUtils.TAB_LOG_HOVER);
 			tabLog.setBorder(new EmptyBorder(0, 0, 0, 0));
 			tabLog.setLayout(new BorderLayout());
 
@@ -319,7 +330,7 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 			buttonPanel.add(btnProcessCloseSeparator);
 			buttonPanel.add(btnClose);
 		}
-
+		
 	}
 
 	private void openOntologyActionPerformed(ActionEvent e) {
@@ -334,11 +345,11 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 		});
 	}
 	
-	private void enableDisableDevModeActionPerformed(ActionEvent e) {
-		System.out.println("Devmode");
-		//TODO: Hide Log and Configuration tabs
-	}
-	
+//	private void enableDisableDevModeActionPerformed(ActionEvent e) {
+//		System.out.println("Devmode");
+//		//TODO: Hide Log and Configuration tabs
+//	}
+//	
 	private void saveOntologyActionPerformed(ActionEvent e) {
 		System.out.println("Saving ontology");
 	}
@@ -401,6 +412,14 @@ public class MainFrame extends JFrame implements RunnableProgressListener {
 		progressBar.setVisible(false);
 		progressBar.setValue(0);
 		txtLogArea.setText(NO_LOG_DATA);
+	}
+	
+	
+	private void settingsActionPerformed() {
+		SettingsDialog diag = new SettingsDialog(this);
+		diag.setLocationRelativeTo(this);
+		diag.pack();
+		diag.setVisible(true);
 	}
 
 	private void aboutActionPerformed() {

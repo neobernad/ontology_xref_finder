@@ -14,6 +14,7 @@ public class AppGUI {
 		Locale.setDefault(new Locale("en", "EN"));
 		
 		FlatDarkLaf.install();
+//		FlatLightLaf.install();
 		
 		
 		EventQueue.invokeLater(new Runnable() {
