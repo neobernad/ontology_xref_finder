@@ -10,7 +10,7 @@ Once you are in the `core` directory, simple run:
 ontology_xref_finder/core$ mvn clean package
 ```
 
-A shaded JAR (standalone java application) is generated in `target/ontology_xref_finder.jar`.
+A shaded JAR (standalone java application) is generated in `target/ontology_xref_finder_core.jar`.
 
 # Usage
 
