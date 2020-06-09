@@ -55,6 +55,7 @@
 									<mainClass>basf.knowledge.omf.ontology_xref_finder.core.App</mainClass>
 								</transformer>
 							</transformers>
+							<outputFile>target/${project.parent.artifactId}_${project.artifactId}.jar</outputFile>
 						</configuration>
 					</execution>
 				</executions>
