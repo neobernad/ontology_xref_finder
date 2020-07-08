@@ -1,8 +1,10 @@
 package basf.knowledge.omf.ontology_xref_finder.core.service;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.semanticweb.owlapi.model.IRI;
@@ -30,14 +32,15 @@ public abstract class XrefProcessAbstractReporter implements IXrefProcessReporte
 	}
 	
 	public void addXrefFound(String sourceLabel, String sourceDef, IRI xrefIri, List<OntologyTerm> ontologyTerms) {
-		List<String> synonyms = new LinkedList<String>();
+		Set<String> synonyms = new HashSet<>();
 		String xrefLabel = ontologyTerms.get(0).getLabel();
 		List<OntologySynonym> xrefSynonyms = ontologyTerms.get(0).getObo_synonym();
 		synonyms.add(xrefLabel); // Use owl class Label as synonym
 		for (OntologySynonym ontologySynonym : xrefSynonyms) {
 			synonyms.add(ontologySynonym.getName());
 		}
-		xrefFound.add(new ReportItemXrefMatch(sourceLabel, sourceDef, xrefIri, xrefLabel, 
+		xrefFound.add(new ReportItemXrefMatch(sourceLabel, sourceDef, xrefIri, xrefLabel,
+				ontologyTerms.get(0).getOntology_name(),
 				synonyms, ontologyTerms.get(0).getDescription()));
 	}
 
@@ -54,5 +57,14 @@ public abstract class XrefProcessAbstractReporter implements IXrefProcessReporte
 	}
 
 	public abstract void getReport() throws IOException;
+
+	public List<ReportItemXrefMatch> getXrefFound() {
+		return xrefFound;
+	}
+
+	public List<ReportItem> getNoXrefFound() {
+		return noXrefFound;
+	}
+	
 
 }

@@ -32,6 +32,7 @@ import basf.knowledge.omf.ontology_xref_finder.core.interfaces.IXrefProcessRepor
 import basf.knowledge.omf.ontology_xref_finder.core.model.OntologySynonym;
 import basf.knowledge.omf.ontology_xref_finder.core.model.OntologyTerm;
 import basf.knowledge.omf.ontology_xref_finder.core.model.XrefMatch;
+import basf.knowledge.omf.ontology_xref_finder.core.service.XrefProcessPlainReporter;
 import basf.knowledge.omf.ontology_xref_finder.core.service.XrefProcessXLSXReporter;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.APIQueryParams;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.Constants;
@@ -59,6 +60,13 @@ public abstract class AbstractXrefClient implements IXrefClient {
 		this.ontology = manager.loadOntologyFromOntologyDocument(ontologyFile);
 		this.max_xrefs = max_xrefs;
 		this.xrefProcessReporter = new XrefProcessXLSXReporter(this.ontologyFile.getParent());
+	}
+	
+	public AbstractXrefClient(String url, Integer max_xrefs) {
+		this.url = url;
+		this.ontology = null;
+		this.max_xrefs = max_xrefs;
+		this.xrefProcessReporter = new XrefProcessPlainReporter(null);
 	}
 
 	public AbstractXrefClient(String url, String ontologyFilePath, Integer max_xrefs)
@@ -131,7 +139,19 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	public Stream<XrefMatch> findXrefByLabel(OWLClass owlClass) throws SocketException {
 		return findXrefByIRI(owlClass, Constants.RDFS_LABEL);
 	}
-
+	
+	public Stream<XrefMatch> findXrefByText(List<String> termList) throws SocketException {
+		List<XrefMatch> matchedXrefs = new LinkedList<XrefMatch>();
+		for (String term : termList) {
+			List<IRI> retrievedIRIs = searchXref(term);
+			if (retrievedIRIs.isEmpty()) {
+				xrefProcessReporter.addNoXrefFound(null, term);
+			}
+			matchedXrefs.add(new XrefMatch(term, retrievedIRIs));
+		}
+		return matchedXrefs.stream();
+	}
+	
 	public Stream<XrefMatch> findXrefByIRI(OWLClass owlClass, IRI annotationIRI) throws SocketException {
 		List<XrefMatch> matchedXrefs = new LinkedList<XrefMatch>();
 		
@@ -189,6 +209,9 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	 * class rdfs:label. The annotations are added to this.ontology.
 	 */
 	public void processOntologyXrefs() {
+		if (this.ontology == null) {
+			throw new NullPointerException("No ontology defined");
+		}
 		LOGGER.info("Configuration is: " + toString());
 		LOGGER.info("Detected '" + getNumberOfClasses() + "' classes in input ontology.");
 		this.ontology.classesInSignature().forEach(owlClass -> {
@@ -214,6 +237,31 @@ public abstract class AbstractXrefClient implements IXrefClient {
 				e.printStackTrace();
 			}
 		});
+	}
+	
+	/**
+	 * This method loops through the a stream of XrefMatches to find the xrefs.
+	 * 
+	 */
+	public IXrefProcessReporter processXrefs(Stream<XrefMatch> xrefStream) {
+//		System.out.println(toString());
+		try {
+			List<XrefMatch> xrefList = xrefStream.collect(Collectors.toList());
+			for (XrefMatch xrefMatch : xrefList) {
+				String classLiteral = xrefMatch.getLiteral();
+				for (IRI xrefIri : xrefMatch.getMatchedIRIs()) {
+					List<OntologyTerm> ontologyTerms = getTerm(xrefIri);
+					if (ontologyTerms.isEmpty()) {
+						xrefProcessReporter.addClassesWithoutXrefData(null, xrefIri.getIRIString());
+					} else {
+						xrefProcessReporter.addXrefFound(classLiteral, null, xrefIri, ontologyTerms);
+					}
+				}
+			}
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
+		return getXrefProcessReporter();
 	}
 
 	public void addXrefToClass(OWLClass owlClass, List<IRI> xrefList) {
@@ -305,6 +353,7 @@ public abstract class AbstractXrefClient implements IXrefClient {
 	}
 
 	protected abstract List<IRI> searchXref(OWLAnnotation annotation) throws SocketException;
+	protected abstract List<IRI> searchXref(String text) throws SocketException;
 
 	public List<String> getOntologiesFilter() {
 		return ontologiesFilter;
@@ -332,14 +381,18 @@ public abstract class AbstractXrefClient implements IXrefClient {
 		StringBuilder builder = new StringBuilder();
 		builder.append("AbstractXrefClient [url=");
 		builder.append(url);
-		builder.append(", ontology=");
-		builder.append(ontology.getOntologyID().getOntologyIRI());
+		if (ontology != null) {
+			builder.append(", ontology=");
+			builder.append(ontology.getOntologyID().getOntologyIRI());
+		}
 		builder.append(", max_xrefs=");
 		builder.append(max_xrefs);
 		builder.append(", ontologiesFilter=");
 		builder.append(ontologiesFilter);
 		builder.append(", noDbXref=");
 		builder.append(noDbXref);
+		builder.append(", exactMatch=");
+		builder.append(exactMatch);
 		builder.append("]");
 		return builder.toString();
 	}

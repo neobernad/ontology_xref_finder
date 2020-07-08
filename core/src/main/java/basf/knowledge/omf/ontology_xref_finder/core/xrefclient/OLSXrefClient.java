@@ -23,6 +23,7 @@ import basf.knowledge.omf.ontology_xref_finder.core.pojo.OLSOntologiesEmbedded;
 import basf.knowledge.omf.ontology_xref_finder.core.pojo.OLSSearch;
 import basf.knowledge.omf.ontology_xref_finder.core.pojo.OLSSearchItem;
 import basf.knowledge.omf.ontology_xref_finder.core.pojo.OLSTermsEmbedded;
+import basf.knowledge.omf.ontology_xref_finder.core.service.XrefProcessXLSXReporter;
 import basf.knowledge.omf.ontology_xref_finder.core.utils.PojoMapper;
 
 public class OLSXrefClient extends AbstractXrefClient {
@@ -47,12 +48,21 @@ public class OLSXrefClient extends AbstractXrefClient {
 	public OLSXrefClient(String url, String ontology) throws OWLOntologyCreationException {
 		super(url, ontology);
 	}
+	
+	public OLSXrefClient(String url, Integer max_xrefs) {
+		super(url, max_xrefs);
+	}
 
 	@Override
 	protected List<IRI> searchXref(OWLAnnotation annotation) throws SocketException {
 		OWLLiteral literal = annotation.getValue().asLiteral().get();
 		String literalValue = literal.getLiteral();
-		WebTarget client = createClient(OLSEndpoint.search(literalValue,
+		return searchXref(literalValue);
+	}
+	
+	@Override
+	protected List<IRI> searchXref(String text) throws SocketException {
+		WebTarget client = createClient(OLSEndpoint.search(text,
 				QUERY_FIELDS, this.max_xrefs, this.exactMatch, this.ontologiesFilter));
 		Response response = client.request(MediaType.APPLICATION_JSON).get();
         // System.out.println(response.readEntity(String.class));
@@ -64,7 +74,7 @@ public class OLSXrefClient extends AbstractXrefClient {
         OLSSearch olsSearch = response.readEntity(OLSSearch.class);
         List<OLSSearchItem> items = olsSearch.getResponse().getDocs();
         if (items.isEmpty()) {
-        	LOGGER.warning("Could not find XRefs for annotation '" + literalValue + "'");
+        	LOGGER.warning("Could not find XRefs for annotation '" + text + "'");
         	return  new LinkedList<IRI>();
         } 
         List<IRI> result = new LinkedList<IRI>();
@@ -74,7 +84,7 @@ public class OLSXrefClient extends AbstractXrefClient {
         	}
 		}
         if (!result.isEmpty()) {
-        	LOGGER.info("Found '" + result.size() + "' crossreference/s for '" + literalValue + "'");
+        	LOGGER.info("Found '" + result.size() + "' crossreference/s for '" + text + "'");
         }
 		return result;
 	}
