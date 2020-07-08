@@ -4,7 +4,7 @@
 
 	<groupId>basf.knowledge.omf</groupId>
 	<artifactId>ontology_xref_finder</artifactId>
-	<version>${appVersion}</version>
+	<version>1.1.0</version>
 	<packaging>pom</packaging>
 
 	<name>ontology_xref_finder</name>
@@ -112,6 +112,6 @@
 	<modules>
 		<module>core</module>
 		<module>frontend</module>
-    <module>api</module>
-  </modules>
+		<module>api</module>
+	</modules>
 </project>
