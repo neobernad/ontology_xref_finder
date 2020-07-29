@@ -38,7 +38,7 @@ public class SwaggerConfig {
 	
 	@SuppressWarnings("deprecation")
 	private ApiInfo metaInfo() {
-		ApiInfo apiInfo = new ApiInfo("Crossreference finder API", "Documentation", "1.0.0", "Terms of Service", "jose-antonio.bernabe-diaz@basf.com", "license", "license");
+		ApiInfo apiInfo = new ApiInfo("Crossreference finder API", "Documentation", "1.0.0", "Terms of Service", "jose-antonio.bernabe-diaz@basf.com", "MIT License", "https://tldrlegal.com/license/mit-license");
 		return apiInfo;
 	}
 }
