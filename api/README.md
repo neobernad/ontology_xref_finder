@@ -30,6 +30,8 @@ Returns a list of ontologies located in an OLS endpoint.
 
 **Code** : `200 OK`
 
+----
+
 #### Example:
 *Query*:
 `{{URL}}:{{PORT}}/rest/xref/ols/getOntologies?url=https://www.ebi.ac.uk/ols/api`
@@ -79,6 +81,8 @@ Returns the crossreferences found under the input criteria.
 #### Success Response
 
 **Code** : `200 OK`
+
+----
 
 #### Example:
 *Query*:
