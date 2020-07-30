@@ -9,10 +9,9 @@ import org.springframework.context.annotation.PropertySource;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@EnableSwagger2
 @Configuration
 @PropertySource("classpath:application.properties")
-@ComponentScan("basf.knowledge.omf.ontology_xref_finder.api.rest")
+@ComponentScan("basf.knowledge.omf.ontology_xref_finder.api")
 public class OntologyXrefFinderApiApplication {
 
 	public static void main(String[] args) {
