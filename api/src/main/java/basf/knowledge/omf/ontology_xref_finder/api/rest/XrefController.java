@@ -23,7 +23,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping("/rest/xref/ols")
+@RequestMapping("/rest/ols")
 @Api(value = "XrefController", description = "Crossreference finder API")
 public class XrefController {
 	private static final Logger LOGGER = Logger.getLogger(XrefController.class.getName());
